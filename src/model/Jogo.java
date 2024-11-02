@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDateTime;
 
 public class Jogo {
+	private int id;
 	private Campeonato campeonato;
 	private Time timeMandante;
 	private Time timeVisitante;
@@ -15,6 +16,23 @@ public class Jogo {
 		this.timeVisitante = timeVisitante;
 		this.dataJogo = dataJogo;
 		this.estadio = estadio;
+	}
+
+	public Jogo(int id, Campeonato campeonato, Time timeMandante, Time timeVisitante, LocalDateTime dataJogo, String estadio) {
+		this.id = id;
+		this.campeonato = campeonato;
+		this.timeMandante = timeMandante;
+		this.timeVisitante = timeVisitante;
+		this.dataJogo = dataJogo;
+		this.estadio = estadio;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public Campeonato getCampeonato() {
+		return campeonato;
 	}
 
 	public Time getTimeMandante() {
