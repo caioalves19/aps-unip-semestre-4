@@ -17,7 +17,7 @@ public class CampeonatoView extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(400, 300));
 
-        ImageIcon icon = new ImageIcon("3106558-fundo-de-noite-de-estadio-de-futebol-vetor.png");
+        ImageIcon icon = new ImageIcon("src/img/background.png");
         JLabel imageLabel = new JLabel(icon);
         imageLabel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
         layeredPane.add(imageLabel, Integer.valueOf(0));

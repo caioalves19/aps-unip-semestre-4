@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class Main {
 	public static void main(String[] args) throws SQLException {
 			CampeonatoDAO campeonatoDAO = new CampeonatoDAOImp();
-			Campeonato campeonato = campeonatoDAO.get(2);
+			Campeonato campeonato = campeonatoDAO.get(1);
 
 			CampeonatoView view = new CampeonatoView(campeonato.getNome());
 
