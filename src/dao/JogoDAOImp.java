@@ -20,12 +20,6 @@ public class JogoDAOImp implements JogoDAO{
 	}
 
 	@Override
-	public int save(Jogo jogo) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public int insert(Jogo jogo) throws SQLException {
 		// TODO Auto-generated method stub
 		return 0;

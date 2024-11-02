@@ -63,12 +63,6 @@ public class TimeDAOImp implements TimeDAO{
 	}
 
 	@Override
-	public int save(Time time) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public int insert(Time time) throws SQLException {
 		Connection con = Database.getConnection();
 		
