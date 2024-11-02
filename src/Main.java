@@ -1,28 +1,24 @@
+import controller.CampeonatoController;
 import dao.*;
 import model.Campeonato;
 import model.Jogo;
 import model.Time;
+import view.CampeonatoView;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class Main {
-
 	public static void main(String[] args) throws SQLException {
+			CampeonatoDAO campeonatoDAO = new CampeonatoDAOImp();
+			Campeonato campeonato = campeonatoDAO.get(2);
 
-		TimeDAO timeDAO = new TimeDAOImp();
-		CampeonatoDAO campeonatoDAO = new CampeonatoDAOImp();
-		JogoDAO jogoDAO = new JogoDAOImp();
+			CampeonatoView view = new CampeonatoView(campeonato.getNome());
 
-		Time vasco = timeDAO.get(1);
-		Time bahia = timeDAO.get(9);
+			CampeonatoController campeonatoController = new CampeonatoController(campeonato, view);
 
-		Campeonato campeonato = campeonatoDAO.get(1);
+			view.setVisible(true);
 
-		Jogo jogo = new Jogo(campeonato, vasco, bahia, LocalDateTime.of(2024, 11, 1, 16, 0), "São Januário");
-
-
-		System.out.println(jogoDAO.getAll());
 	}
-
 }
+
