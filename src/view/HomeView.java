@@ -57,7 +57,7 @@ public class HomeView extends JFrame {
                 campeonatoLabel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        CampeonatoView campeonatoView = new CampeonatoView(campeonato.getNome());
+                        CampeonatoView campeonatoView = new CampeonatoView(campeonato.getNome(), HomeView.this);
                         campeonatoView.setVisible(true);
                         dispose();
                     }
