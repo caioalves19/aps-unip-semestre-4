@@ -10,7 +10,7 @@ public class ListaJogosView extends JFrame {
     public ListaJogosView() {
         setTitle("Jogos Brasileirão");
         setSize(534, 390);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
@@ -52,8 +52,8 @@ public class ListaJogosView extends JFrame {
         voltarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CampeonatoView campeonatoView = new CampeonatoView("Informações do Campeonato");
-                campeonatoView.setVisible(true);
+//                CampeonatoView campeonatoView = new CampeonatoView("Informações do Campeonato");
+//                campeonatoView.setVisible(true);
                 dispose(); // Fecha a tela atual (JogosBrasileirao)
             }
         });

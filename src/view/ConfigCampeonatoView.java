@@ -16,7 +16,7 @@ public class ConfigCampeonatoView extends JFrame {
     public ConfigCampeonatoView() {
         setTitle("Configurações");
         setSize(705, 482);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
@@ -52,8 +52,8 @@ public class ConfigCampeonatoView extends JFrame {
         botaoVoltar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CampeonatoView campeonatoView = new CampeonatoView("Informações do Campeonato");
-                campeonatoView.setVisible(true);
+//                CampeonatoView campeonatoView = new CampeonatoView("Informações do Campeonato");
+//                campeonatoView.setVisible(true);
                 dispose();
             }
         });
