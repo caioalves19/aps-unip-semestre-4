@@ -1,5 +1,8 @@
 package view;
 
+import controller.CampeonatoController;
+import model.Campeonato;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -8,12 +11,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.SQLException;
 
 public class ConfigCampeonatoView extends JFrame {
 
-    private JPanel infoPanel; // Painel para mostrar informações
+    private JPanel infoPanel;// Painel para mostrar informações
+    private JTextField caixaTexto1;
+    private CampeonatoController campeonatoController;
 
-    public ConfigCampeonatoView() {
+    public ConfigCampeonatoView(int idCampeonato, CampeonatoView campeonato) throws SQLException {
+        campeonatoController = new CampeonatoController(this);
+
         setTitle("Configurações");
         setSize(705, 482);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -52,8 +60,6 @@ public class ConfigCampeonatoView extends JFrame {
         botaoVoltar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                CampeonatoView campeonatoView = new CampeonatoView("Informações do Campeonato");
-//                campeonatoView.setVisible(true);
                 dispose();
             }
         });
@@ -64,9 +70,9 @@ public class ConfigCampeonatoView extends JFrame {
         layeredPane.add(botaoMenos, Integer.valueOf(1));
 
         // Primeira caixa de texto
-        JTextField caixaTexto1 = new JTextField("Digite o Campeonato...");
+        caixaTexto1 = new JTextField("Digite o Campeonato...");
         caixaTexto1.setFont(new Font("Arial", Font.PLAIN, 16));
-        caixaTexto1.setForeground(Color.GRAY);
+        caixaTexto1.setForeground(Color.BLACK);
         caixaTexto1.setBackground(Color.WHITE); // Fundo branco
         caixaTexto1.setBounds(130, 150, 300, 30);
         adicionarPlaceholder(caixaTexto1, "Digite o Campeonato...");
@@ -105,6 +111,8 @@ public class ConfigCampeonatoView extends JFrame {
                 // Não usado para JTextField
             }
         });
+        String nomeCampeonato = campeonatoController.getCampeonatoByID(idCampeonato).getNome();
+        atualizarNomeCampeonato(nomeCampeonato);
 
         add(layeredPane);
     }
@@ -145,8 +153,7 @@ public class ConfigCampeonatoView extends JFrame {
         infoPanel.repaint();
     }
 
-    public static void main(String[] args) {
-        ConfigCampeonatoView config = new ConfigCampeonatoView();
-        config.setVisible(true);
+    private void atualizarNomeCampeonato(String nome){
+        this.caixaTexto1.setText(nome);
     }
 }

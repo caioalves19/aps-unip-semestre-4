@@ -1,13 +1,21 @@
 package view;
 
+import controller.CampeonatoController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class CampeonatoView extends JFrame {
+        private HomeView homeView;
+        private CampeonatoController campeonatoController;
 
-    public CampeonatoView(String titulo) {
+    public CampeonatoView(int idCampeonato, HomeView view) throws SQLException {
+        this.homeView = homeView;
+        campeonatoController = new CampeonatoController(this);
+        String titulo = campeonatoController.getCampeonatoByID(idCampeonato).getNome();
         setTitle(titulo);
         setSize(925, 592);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,7 +44,13 @@ public class CampeonatoView extends JFrame {
         botaoConfig.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Abrindo configurações...");
+                ConfigCampeonatoView configCampeonatoView = null;
+                try {
+                    configCampeonatoView = new ConfigCampeonatoView(idCampeonato, CampeonatoView.this);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                configCampeonatoView.setVisible(true);
             }
         });
 
@@ -47,7 +61,9 @@ public class CampeonatoView extends JFrame {
         botaoVoltar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Voltando...");
+                HomeView homeView = new HomeView();
+                homeView.setVisible(true); // Exibe a HomeView
+                dispose(); // Fecha a CampeonatoView
             }
         });
 
@@ -59,7 +75,8 @@ public class CampeonatoView extends JFrame {
         botaoJogos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Abrindo jogos...");
+                ListaJogosView listaJogosView = new ListaJogosView();
+                listaJogosView.setVisible(true);
             }
         });
 
