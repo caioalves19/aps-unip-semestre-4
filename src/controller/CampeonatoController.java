@@ -1,36 +1,31 @@
 package controller;
 
 import dao.CampeonatoDAO;
+import dao.CampeonatoDAOImp;
 import model.Campeonato;
 import view.CampeonatoView;
+import view.HomeView;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class CampeonatoController {
-    private Campeonato campeonato;
     private CampeonatoView view;
+    private HomeView homeView;
+    private CampeonatoDAO campeonatoDAO;
 
-    public CampeonatoController(Campeonato campeonato, CampeonatoView view) {
-        this.campeonato = campeonato;
+    public CampeonatoController(CampeonatoView view) {
         this.view = view;
+        this.campeonatoDAO = new CampeonatoDAOImp();
     }
 
-    public void setView(CampeonatoView view) {
+    public CampeonatoController(HomeView view) {
+        this.homeView = view;
+        this.campeonatoDAO = new CampeonatoDAOImp();
     }
 
-    public void carregarCampeonato(int id) throws SQLException {
-    }
-
-    public void abrirConfiguracoes() {
-        // Lógica para abrir a tela de configurações
-    }
-
-    public void voltarTelaInicial() {
-        // Lógica para voltar à tela inicial
-    }
-
-    public void abrirJogos() {
-        // Lógica para abrir a lista de jogos
+    public List<Campeonato> getCampeonatos() throws SQLException {
+        return campeonatoDAO.getAll();
     }
 }
 

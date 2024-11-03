@@ -4,21 +4,20 @@ import model.Campeonato;
 import model.Jogo;
 import model.Time;
 import view.CampeonatoView;
+import view.HomeView;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class Main {
 	public static void main(String[] args) throws SQLException {
-			CampeonatoDAO campeonatoDAO = new CampeonatoDAOImp();
-			Campeonato campeonato = campeonatoDAO.get(1);
 
-			CampeonatoView view = new CampeonatoView(campeonato.getNome());
 
-			CampeonatoController campeonatoController = new CampeonatoController(campeonato, view);
-
-			view.setVisible(true);
-
+		SwingUtilities.invokeLater(() -> {
+			HomeView homeView = new HomeView();
+			homeView.setVisible(true);
+		});
 	}
 }
 
