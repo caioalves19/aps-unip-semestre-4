@@ -9,8 +9,6 @@ import java.util.List;
 
 import model.Campeonato;
 
-import javax.xml.crypto.Data;
-
 public class CampeonatoDAOImp implements CampeonatoDAO{
 
 	@Override

@@ -13,6 +13,22 @@ import model.Time;
 public class JogoDAOImp implements JogoDAO {
 
     @Override
+    public ArrayList<Jogo> getAllByCampeonato(int idCampeonato) throws SQLException {
+        ArrayList<Jogo> jogos = new ArrayList<>();
+        Connection con = Database.getConnection();
+        String sql = "SELECT * FROM jogo WHERE campeonato = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, idCampeonato);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Jogo jogo = criarJogo(rs);
+            jogos.add(jogo);
+        }
+
+        return jogos;
+    }
+
+    @Override
     public Jogo get(int id) throws SQLException {
         Jogo jogo = null;
 

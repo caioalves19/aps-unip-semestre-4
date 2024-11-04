@@ -76,7 +76,12 @@ public class CampeonatoView extends JFrame {
         botaoJogos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ListaJogosView listaJogosView = new ListaJogosView();
+                ListaJogosView listaJogosView = null;
+                try {
+                    listaJogosView = new ListaJogosView(idCampeonato);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 listaJogosView.setVisible(true);
             }
         });

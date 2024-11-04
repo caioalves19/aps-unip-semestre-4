@@ -4,15 +4,29 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.Calendar;
+import model.Jogo;
 
 public class CriarJogoView extends JFrame {
 
     private JSpinner horaSpinner;
     private JSpinner dataSpinner;
+    private JTextField estadioTextField;
+    private JComboBox<String> time1ComboBox;
+    private JComboBox<String> time2ComboBox;
+    private Jogo jogo;
 
+    // Construtor para criar um novo jogo
     public CriarJogoView() {
-        setTitle("Criar Jogo");
+        this(null);
+    }
+
+    // Construtor para editar um jogo existente
+    public CriarJogoView(Jogo jogo) {
+        this.jogo = jogo;
+        setTitle(jogo == null ? "Criar Jogo" : "Editar Jogo");
         setSize(705, 482);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -21,28 +35,27 @@ public class CriarJogoView extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(705, 482));
 
-        JLabel tituloLabel = new JLabel("Criar Novo Jogo", SwingConstants.CENTER);
+        JLabel tituloLabel = new JLabel(jogo == null ? "Criar Novo Jogo" : "Editar Jogo", SwingConstants.CENTER);
         tituloLabel.setFont(new Font("Arial", Font.BOLD, 32));
         tituloLabel.setForeground(Color.BLACK);
         tituloLabel.setBounds(0, 20, getWidth(), 50);
         layeredPane.add(tituloLabel, Integer.valueOf(1));
 
         // ComboBox para Time 1
-        JComboBox<String> time1ComboBox = new JComboBox<>(new String[]{"Selecione o Time 1", "Time A", "Time B", "Time C"});
+        time1ComboBox = new JComboBox<>(new String[]{"Selecione o Time 1", "Time A", "Time B", "Time C"});
         time1ComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
         time1ComboBox.setBounds(130, 150, 200, 30);
         layeredPane.add(time1ComboBox, Integer.valueOf(1));
 
         // ComboBox para Time 2
-        JComboBox<String> time2ComboBox = new JComboBox<>(new String[]{"Selecione o Time 2", "Time X", "Time Y", "Time Z"});
+        time2ComboBox = new JComboBox<>(new String[]{"Selecione o Time 2", "Time X", "Time Y", "Time Z"});
         time2ComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
         time2ComboBox.setBounds(340, 150, 200, 30);
         layeredPane.add(time2ComboBox, Integer.valueOf(1));
 
-        // Campo de texto para o Estádio
-        JTextField estadioTextField = new JTextField("Digite o Estádio...");
+        // Campo de texto para o Estádio com placeholder
+        estadioTextField = new JTextField();
         estadioTextField.setFont(new Font("Arial", Font.PLAIN, 16));
-        estadioTextField.setForeground(Color.GRAY);
         estadioTextField.setBounds(130, 200, 410, 30);
         adicionarPlaceholder(estadioTextField, "Digite o Estádio...");
         layeredPane.add(estadioTextField, Integer.valueOf(1));
@@ -61,70 +74,60 @@ public class CriarJogoView extends JFrame {
         horaSpinner.setBounds(340, 250, 200, 30);
         layeredPane.add(horaSpinner, Integer.valueOf(1));
 
-        // Botão para agendar o jogo
-        JButton agendarButton = new JButton("Salvar");
-        agendarButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        agendarButton.setBounds(450, 290, 90, 28);
-        agendarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String time1 = (String) time1ComboBox.getSelectedItem();
-                String time2 = (String) time2ComboBox.getSelectedItem();
-                String estadio = estadioTextField.getText();
-                mostrarDataHora(time1, time2, estadio);
-            }
-        });
-        layeredPane.add(agendarButton, Integer.valueOf(1));
+        if (jogo != null) {
+            carregarDadosDoJogo();
+        }
 
-        // Botão Voltar
-        JButton voltarButton = new JButton("Voltar");
-        voltarButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        voltarButton.setBounds(25, 20, 90, 28);
-        voltarButton.addActionListener(new ActionListener() {
+        // Botão para salvar o jogo
+        JButton salvarButton = new JButton("Salvar");
+        salvarButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        salvarButton.setBounds(450, 290, 90, 28);
+        salvarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ListaJogosView listaJogosView = new ListaJogosView();
-                listaJogosView.setVisible(true);
-                dispose(); // Fecha a janela atual
+                if (jogo == null) {
+                    // Código para salvar novo jogo
+                } else {
+                    // Código para atualizar jogo existente
+                }
+                dispose();
             }
         });
-        layeredPane.add(voltarButton, Integer.valueOf(1));
+        layeredPane.add(salvarButton, Integer.valueOf(1));
 
         add(layeredPane);
     }
 
-    private void adicionarPlaceholder(JTextField textField, String placeholder) {
-        textField.setText(placeholder);
-        textField.setForeground(Color.GRAY);
-        textField.addFocusListener(new java.awt.event.FocusAdapter() {
+    private void carregarDadosDoJogo() {
+        time1ComboBox.setSelectedItem(jogo.getTimeMandante());
+        time2ComboBox.setSelectedItem(jogo.getTimeVisitante());
+        estadioTextField.setText(jogo.getEstadio());
+        //dataSpinner.setValue(jogo.getDataJogo());
+        //horaSpinner.setValue(jogo.getDataJogo());
+    }
+
+    // Método para adicionar placeholder
+    private void adicionarPlaceholder(JTextField textField, String placeholderText) {
+        Color placeholderColor = Color.GRAY;
+        textField.setForeground(placeholderColor);
+        textField.setText(placeholderText);
+
+        textField.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                if (textField.getText().equals(placeholder)) {
+            public void focusGained(FocusEvent e) {
+                if (textField.getText().equals(placeholderText)) {
                     textField.setText("");
-                    textField.setForeground(Color.BLACK);
+                    textField.setForeground(Color.BLACK); // Cor do texto normal
                 }
             }
 
             @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
+            public void focusLost(FocusEvent e) {
                 if (textField.getText().isEmpty()) {
-                    textField.setForeground(Color.GRAY);
-                    textField.setText(placeholder);
+                    textField.setForeground(placeholderColor); // Cor do placeholder
+                    textField.setText(placeholderText);
                 }
             }
         });
     }
-
-    private void mostrarDataHora(String time1, String time2, String estadio) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime((java.util.Date) dataSpinner.getValue());
-        int hora = (Integer) horaSpinner.getValue();
-        calendar.set(Calendar.HOUR_OF_DAY, hora);
-
-        JOptionPane.showMessageDialog(this, String.format("Jogo agendado:\nTime 1: %s\nTime 2: %s\nEstádio: %s\nData: %1$td/%1$tm/%1$tY %1$tH:%1$tM", time1, time2, estadio, calendar));
-    }
-
-    public static void main(String[] args) {
-        CriarJogoView criarJogoView = new CriarJogoView();
-        criarJogoView.setVisible(true);
-    }}
+}
