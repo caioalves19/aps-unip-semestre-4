@@ -11,6 +11,7 @@ import java.sql.SQLException;
 public class CampeonatoView extends JFrame {
         private HomeView homeView;
         private CampeonatoController campeonatoController;
+        private JLabel tituloLabel;
 
     public CampeonatoView(int idCampeonato, HomeView view) throws SQLException {
         this.homeView = homeView;
@@ -30,7 +31,7 @@ public class CampeonatoView extends JFrame {
         imageLabel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
         layeredPane.add(imageLabel, Integer.valueOf(0));
 
-        JLabel tituloLabel = new JLabel(titulo, SwingConstants.CENTER);
+        tituloLabel = new JLabel(titulo, SwingConstants.CENTER);
         tituloLabel.setFont(new Font("Arial", Font.BOLD, 32));
         tituloLabel.setForeground(Color.WHITE);
         tituloLabel.setBounds(0, 20, getWidth(), 50);
@@ -86,4 +87,8 @@ public class CampeonatoView extends JFrame {
 
         add(layeredPane);
     }
+
+    public void atualizarCampeonato(String nome) {
+        this.tituloLabel.setText(nome);
+        }
 }

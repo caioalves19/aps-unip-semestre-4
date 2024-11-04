@@ -40,7 +40,6 @@ public class ListaJogosView extends JFrame {
                 // Abre a tela CriarJogo ao clicar no botão "Adicione um jogo"
                 CriarJogoView criarJogoViewTela = new CriarJogoView();
                 criarJogoViewTela.setVisible(true);
-                dispose(); // Fecha a tela atual (JogosBrasileirao)
             }
         });
         layeredPane.add(botaoAdicionarJogo, Integer.valueOf(1));

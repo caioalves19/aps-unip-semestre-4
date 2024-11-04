@@ -38,5 +38,10 @@ public class CampeonatoController {
     public Campeonato getCampeonatoByID(int id) throws SQLException {
         return campeonatoDAO.get(id);
     }
+
+    public void updateCampeonato(int idCampeonato, String nome, int ano) throws SQLException {
+        Campeonato campeonato = new Campeonato(idCampeonato, nome, ano);
+        campeonatoDAO.update(campeonato);
+    }
 }
 
