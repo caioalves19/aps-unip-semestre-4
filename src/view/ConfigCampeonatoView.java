@@ -1,6 +1,7 @@
 package view;
 
 import controller.CampeonatoController;
+import controller.ConfigCampeonatoController;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -11,16 +12,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class ConfigCampeonatoView extends JFrame {
 
-    private JPanel infoPanel;
+    private DefaultListModel<String> timesModel;
+    private JList<String> timesList;
     private JTextField caixaTextoNomeCampeonato;
-    private CampeonatoController campeonatoController;
+    private ConfigCampeonatoController campeonatoController;
     private JComboBox<String> anoComboBox;
 
     public ConfigCampeonatoView(int idCampeonato, CampeonatoView campeonato) throws SQLException {
-        campeonatoController = new CampeonatoController(this);
+        campeonatoController = new ConfigCampeonatoController(this);
 
         setTitle("Configurações");
         setSize(705, 482);
@@ -37,25 +40,83 @@ public class ConfigCampeonatoView extends JFrame {
         tituloLabel.setBounds(0, 20, getWidth(), 50);
         layeredPane.add(tituloLabel, Integer.valueOf(1));
 
-        JButton botaoRemoverTime = new JButton("-");
-        botaoRemoverTime.setFont(new Font("Arial", Font.PLAIN, 16));
-        botaoRemoverTime.setBounds(450, 299, 90, 28);
+        // Inicialização do modelo e JList para os times
+        timesModel = new DefaultListModel<>();
+        timesList = new JList<>(timesModel);
+        timesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(timesList);
+        scrollPane.setBounds(130, 250, 300, 150);
+        layeredPane.add(scrollPane, Integer.valueOf(1));
 
         JButton botaoAdicionarTime = new JButton("+");
         botaoAdicionarTime.setFont(new Font("Arial", Font.PLAIN, 16));
         botaoAdicionarTime.setBounds(450, 258, 90, 28);
+        botaoAdicionarTime.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Carregar a lista de times do banco de dados
+                    ArrayList<String> todosOsTimes = campeonatoController.getAllTimesNaoParticipantes(idCampeonato); // Método que você precisa implementar no controlador
+
+                    // Criar uma lista para exibição
+                    String[] timesArray = todosOsTimes.toArray(new String[0]);
+
+                    // Mostrar a lista de times em um JOptionPane
+                    String timeSelecionado = (String) JOptionPane.showInputDialog(
+                            null,
+                            "Selecione um time:",
+                            "Adicionar Time",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            timesArray,
+                            timesArray[0]
+                    );
+
+                    // Adicionar o time selecionado ao modelo se não for nulo
+                    if (timeSelecionado != null && !timeSelecionado.trim().isEmpty()) {
+                        campeonatoController.addTimeToCampeonato(idCampeonato, timeSelecionado);
+                        atualizarListaTimes(idCampeonato);
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Erro ao carregar os times: " + ex.getMessage());
+                }
+            }
+        });
+
+
+        JButton botaoRemoverTime = new JButton("-");
+        botaoRemoverTime.setFont(new Font("Arial", Font.PLAIN, 16));
+        botaoRemoverTime.setBounds(450, 299, 90, 28);
+        botaoRemoverTime.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = timesList.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    try {
+                        campeonatoController.removeTimeFromCampeonato(idCampeonato, timesList.getSelectedValue());
+                        atualizarListaTimes(idCampeonato);
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Selecione um time para remover.");
+                }
+            }
+        });
 
         JButton botaoSalvarInfoCampeonato = new JButton("Salvar");
         botaoSalvarInfoCampeonato.setFont(new Font("Arial", Font.PLAIN, 16));
         botaoSalvarInfoCampeonato.setBounds(450, 150, 90, 28);
-
         botaoSalvarInfoCampeonato.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String nomeCampeonato = caixaTextoNomeCampeonato.getText();
-                String anoCampeonato =  anoComboBox.getItemAt(anoComboBox.getSelectedIndex());
+                String anoCampeonato = anoComboBox.getItemAt(anoComboBox.getSelectedIndex());
 
                 try {
                     campeonatoController.updateCampeonato(idCampeonato, nomeCampeonato, Integer.parseInt(anoCampeonato));
+                    // Aqui você pode salvar os times também, se necessário
+                    // Exemplo: campeonatoController.saveTimes(idCampeonato, timesModel.toArray());
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -67,7 +128,6 @@ public class ConfigCampeonatoView extends JFrame {
         JButton botaoVoltar = new JButton("Voltar");
         botaoVoltar.setFont(new Font("Arial", Font.PLAIN, 16));
         botaoVoltar.setBounds(25, 20, 90, 28);
-
         botaoVoltar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -80,94 +140,65 @@ public class ConfigCampeonatoView extends JFrame {
         layeredPane.add(botaoAdicionarTime, Integer.valueOf(1));
         layeredPane.add(botaoRemoverTime, Integer.valueOf(1));
 
-        // Primeira caixa de texto
+        // Caixa de texto para o nome do campeonato
         caixaTextoNomeCampeonato = new JTextField("Digite o Campeonato...");
         caixaTextoNomeCampeonato.setFont(new Font("Arial", Font.PLAIN, 16));
         caixaTextoNomeCampeonato.setForeground(Color.GRAY);
-        caixaTextoNomeCampeonato.setBackground(Color.WHITE); // Fundo branco
         caixaTextoNomeCampeonato.setBounds(130, 150, 300, 30);
         adicionarPlaceholder(caixaTextoNomeCampeonato, "Digite o Campeonato...");
         layeredPane.add(caixaTextoNomeCampeonato, Integer.valueOf(1));
 
-        String[] anos = new String[201]; // Cria um array para os anos de 1900 a 2100
+        // ComboBox para anos
+        String[] anos = new String[201];
         for (int i = 0; i < anos.length; i++) {
-            anos[i] = String.valueOf(1900 + i); // Preenche o array com os anos
+            anos[i] = String.valueOf(1900 + i);
         }
         anoComboBox = new JComboBox<>(anos);
         anoComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
-        anoComboBox.setBackground(Color.WHITE); // Fundo branco
-        anoComboBox.setForeground(Color.BLACK); // Texto preto
         anoComboBox.setBounds(130, 200, 300, 30);
-
         layeredPane.add(anoComboBox, Integer.valueOf(1));
 
-        // Painel para mostrar informações
-        infoPanel = new JPanel();
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        infoPanel.setBounds(130, 250, 300, 100);
-        infoPanel.setBorder(BorderFactory.createTitledBorder("Times"));
-        layeredPane.add(infoPanel, Integer.valueOf(1));
-
-        // Adiciona DocumentListener à primeira caixa de texto
-        caixaTextoNomeCampeonato.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateInfoPanel(caixaTextoNomeCampeonato.getText());
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateInfoPanel(caixaTextoNomeCampeonato.getText());
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                // Não usado para JTextField
-            }
-        });
-
+        // Carregar dados do campeonato
         String nomeCampeonato = campeonatoController.getCampeonatoByID(idCampeonato).getNome();
         atualizarNomeCampeonato(nomeCampeonato);
-
         String anoCampeonato = String.valueOf(campeonatoController.getCampeonatoByID(idCampeonato).getAno());
         anoComboBox.setSelectedItem(anoCampeonato);
+
+        // Carregar times do banco de dados
+        atualizarListaTimes(idCampeonato);
 
         add(layeredPane);
     }
 
+    private void atualizarListaTimes(int idCampeonato) throws SQLException {
+        timesModel.clear();
+        ArrayList<String> timesParticipantes = campeonatoController.getTimesByCampeonatoID(idCampeonato);
+
+        for (String time : timesParticipantes) {
+            timesModel.addElement(time);
+        }
+    }
+
     private void adicionarPlaceholder(JTextField textField, String placeholder) {
         textField.setText(placeholder);
-        textField.setForeground(Color.GRAY); // Cor cinza para o placeholder
+        textField.setForeground(Color.GRAY);
         textField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (textField.getText().equals(placeholder)) {
-                    textField.setText(""); // Limpa o placeholder
-                    textField.setForeground(Color.BLACK); // Define a cor do texto como preto
+                    textField.setText("");
+                    textField.setForeground(Color.BLACK);
                 }
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (textField.getText().isEmpty()) {
-                    textField.setForeground(Color.GRAY); // Retorna a cor do texto como cinza
-                    textField.setText(placeholder); // Define o texto como o placeholder novamente
+                    textField.setForeground(Color.GRAY);
+                    textField.setText(placeholder);
                 }
             }
         });
-    }
-
-    private void updateInfoPanel(String text) {
-        infoPanel.removeAll();
-
-        if (!text.isEmpty() && !text.equals("Digite o Campeonato...")) {
-            JLabel infoLabel = new JLabel("Você digitou: " + text);
-            infoLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-            infoPanel.add(infoLabel);
-        }
-
-        infoPanel.revalidate();
-        infoPanel.repaint();
     }
 
     private void atualizarNomeCampeonato(String nome) {

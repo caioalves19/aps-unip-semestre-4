@@ -27,28 +27,25 @@ public class CriarJogoView extends JFrame {
         tituloLabel.setBounds(0, 20, getWidth(), 50);
         layeredPane.add(tituloLabel, Integer.valueOf(1));
 
-        // Primeira caixa de texto
-        JTextField campo1 = new JTextField("Digite o Time 1...");
-        campo1.setFont(new Font("Arial", Font.PLAIN, 16));
-        campo1.setForeground(Color.GRAY);
-        campo1.setBounds(130, 150, 200, 30);
-        adicionarPlaceholder(campo1, "Digite o Time 1...");
-        layeredPane.add(campo1, Integer.valueOf(1));
+        // ComboBox para Time 1
+        JComboBox<String> time1ComboBox = new JComboBox<>(new String[]{"Selecione o Time 1", "Time A", "Time B", "Time C"});
+        time1ComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
+        time1ComboBox.setBounds(130, 150, 200, 30);
+        layeredPane.add(time1ComboBox, Integer.valueOf(1));
 
-        // Segunda caixa de texto
-        JTextField campo2 = new JTextField("Digite o Time 2...");
-        campo2.setFont(new Font("Arial", Font.PLAIN, 16));
-        campo2.setForeground(Color.GRAY);
-        campo2.setBounds(340, 150, 200, 30);
-        adicionarPlaceholder(campo2, "Digite o Time 2...");
-        layeredPane.add(campo2, Integer.valueOf(1));
-        
-        JTextField campo3 = new JTextField("Digite o Estadio...");
-        campo3.setFont(new Font("Arial", Font.PLAIN, 16));
-        campo3.setForeground(Color.GRAY);
-        campo3.setBounds(130, 200, 410, 30);
-        adicionarPlaceholder(campo3, "Digite o Estadio...");
-        layeredPane.add(campo3, Integer.valueOf(1));
+        // ComboBox para Time 2
+        JComboBox<String> time2ComboBox = new JComboBox<>(new String[]{"Selecione o Time 2", "Time X", "Time Y", "Time Z"});
+        time2ComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
+        time2ComboBox.setBounds(340, 150, 200, 30);
+        layeredPane.add(time2ComboBox, Integer.valueOf(1));
+
+        // Campo de texto para o Estádio
+        JTextField estadioTextField = new JTextField("Digite o Estádio...");
+        estadioTextField.setFont(new Font("Arial", Font.PLAIN, 16));
+        estadioTextField.setForeground(Color.GRAY);
+        estadioTextField.setBounds(130, 200, 410, 30);
+        adicionarPlaceholder(estadioTextField, "Digite o Estádio...");
+        layeredPane.add(estadioTextField, Integer.valueOf(1));
 
         // Spinner para a data
         SpinnerDateModel dataModel = new SpinnerDateModel();
@@ -71,7 +68,10 @@ public class CriarJogoView extends JFrame {
         agendarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mostrarDataHora(campo1.getText(), campo2.getText());
+                String time1 = (String) time1ComboBox.getSelectedItem();
+                String time2 = (String) time2ComboBox.getSelectedItem();
+                String estadio = estadioTextField.getText();
+                mostrarDataHora(time1, time2, estadio);
             }
         });
         layeredPane.add(agendarButton, Integer.valueOf(1));
@@ -115,17 +115,16 @@ public class CriarJogoView extends JFrame {
         });
     }
 
-    private void mostrarDataHora(String time1, String time2) {
+    private void mostrarDataHora(String time1, String time2, String estadio) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime((java.util.Date) dataSpinner.getValue());
         int hora = (Integer) horaSpinner.getValue();
         calendar.set(Calendar.HOUR_OF_DAY, hora);
 
-        JOptionPane.showMessageDialog(this, String.format("Jogo agendado:\nTime 1: %s\nTime 2: %s\nData: %1$td/%1$tm/%1$tY %1$tH:%1$tM", time1, time2, calendar));
+        JOptionPane.showMessageDialog(this, String.format("Jogo agendado:\nTime 1: %s\nTime 2: %s\nEstádio: %s\nData: %1$td/%1$tm/%1$tY %1$tH:%1$tM", time1, time2, estadio, calendar));
     }
 
     public static void main(String[] args) {
         CriarJogoView criarJogoView = new CriarJogoView();
         criarJogoView.setVisible(true);
-    }
-}
+    }}

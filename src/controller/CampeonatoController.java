@@ -2,12 +2,15 @@ package controller;
 
 import dao.CampeonatoDAO;
 import dao.CampeonatoDAOImp;
+import dao.CampeonatoTimeDAO;
+import dao.CampeonatoTimeDAOImp;
 import model.Campeonato;
 import view.CampeonatoView;
 import view.ConfigCampeonatoView;
 import view.HomeView;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CampeonatoController {
