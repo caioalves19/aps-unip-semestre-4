@@ -40,6 +40,12 @@ public class ConfigCampeonatoView extends JFrame {
         tituloLabel.setBounds(0, 20, getWidth(), 50);
         layeredPane.add(tituloLabel, Integer.valueOf(1));
 
+        JLabel tituloTimes = new JLabel("Times participantes");
+        tituloTimes.setFont(new Font("Arial", Font.BOLD, 12));
+        tituloTimes.setForeground(Color.BLACK);
+        tituloTimes.setBounds(130, 215, getWidth(), 50);
+        layeredPane.add(tituloTimes, Integer.valueOf(1));
+
         // Inicialização do modelo e JList para os times
         timesModel = new DefaultListModel<>();
         timesList = new JList<>(timesModel);
@@ -107,7 +113,7 @@ public class ConfigCampeonatoView extends JFrame {
 
         JButton botaoSalvarInfoCampeonato = new JButton("Salvar");
         botaoSalvarInfoCampeonato.setFont(new Font("Arial", Font.PLAIN, 16));
-        botaoSalvarInfoCampeonato.setBounds(450, 150, 90, 28);
+        botaoSalvarInfoCampeonato.setBounds(450, 125, 90, 28);
         botaoSalvarInfoCampeonato.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String nomeCampeonato = caixaTextoNomeCampeonato.getText();
@@ -144,7 +150,7 @@ public class ConfigCampeonatoView extends JFrame {
         caixaTextoNomeCampeonato = new JTextField("Digite o Campeonato...");
         caixaTextoNomeCampeonato.setFont(new Font("Arial", Font.PLAIN, 16));
         caixaTextoNomeCampeonato.setForeground(Color.GRAY);
-        caixaTextoNomeCampeonato.setBounds(130, 150, 300, 30);
+        caixaTextoNomeCampeonato.setBounds(130, 125, 300, 30);
         adicionarPlaceholder(caixaTextoNomeCampeonato, "Digite o Campeonato...");
         layeredPane.add(caixaTextoNomeCampeonato, Integer.valueOf(1));
 
@@ -155,7 +161,7 @@ public class ConfigCampeonatoView extends JFrame {
         }
         anoComboBox = new JComboBox<>(anos);
         anoComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
-        anoComboBox.setBounds(130, 200, 300, 30);
+        anoComboBox.setBounds(130, 160, 300, 30);
         layeredPane.add(anoComboBox, Integer.valueOf(1));
 
         // Carregar dados do campeonato

@@ -3,6 +3,8 @@ package view;
 import controller.CampeonatoController;
 import model.Campeonato;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,19 +41,24 @@ public class HomeView extends JFrame {
         add(layeredPane);
     }
 
+
     private void initCampeonatos(JLayeredPane layeredPane) {
         try {
             // Acessa o banco e obtém todos os campeonatos
             List<Campeonato> campeonatos = campeonatoController.getCampeonatos();
 
-            int yPosition = 150; // Posição inicial para os campeonatos
+            // Cria um JPanel com BoxLayout para centralizar os JPanels dos campeonatos
+            JPanel panelCampeonatos = new JPanel();
+            panelCampeonatos.setLayout(new BoxLayout(panelCampeonatos, BoxLayout.Y_AXIS));
+            panelCampeonatos.setOpaque(false); // Torna o painel transparente
 
+            // Adiciona cada campeonato dentro de um JPanel com margem e centralizado
             for (Campeonato campeonato : campeonatos) {
-                JLabel campeonatoLabel = new JLabel(campeonato.getNome());
+                // Cria um JLabel para o nome do campeonato
+                JLabel campeonatoLabel = new JLabel(campeonato.getNome(), SwingConstants.CENTER);
                 campeonatoLabel.setFont(new Font("Arial", Font.PLAIN, 20));
                 campeonatoLabel.setForeground(Color.white);
                 campeonatoLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                campeonatoLabel.setBounds(170, yPosition, 170, 30);
 
                 // Adiciona um listener para responder ao clique
                 campeonatoLabel.addMouseListener(new MouseAdapter() {
@@ -68,9 +75,36 @@ public class HomeView extends JFrame {
                     }
                 });
 
-                layeredPane.add(campeonatoLabel, Integer.valueOf(1));
-                yPosition += 50; // Ajusta a posição vertical para o próximo campeonato
+                // Cria um JPanel para envolver o JLabel e aplica uma margem interna e externa
+                JPanel campeonatoPanel = new JPanel();
+                campeonatoPanel.setLayout(new BorderLayout());
+                campeonatoPanel.setOpaque(false);// Torna o painel transparente
+                campeonatoPanel.setBorder(BorderFactory.createCompoundBorder(
+                        new LineBorder(Color.WHITE, 2, true), // Borda branca com cantos arredondados
+                        new EmptyBorder(10, 10, 10, 10) // Margem interna de 10 pixels
+                ));
+                campeonatoPanel.setMaximumSize(new Dimension(300, 40)); // Define um tamanho fixo para centralizar
+                campeonatoPanel.add(campeonatoLabel, BorderLayout.CENTER);
+
+                // Centraliza o painel no BoxLayout
+                campeonatoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+                // Adiciona o JPanel do campeonato ao painel principal
+                panelCampeonatos.add(campeonatoPanel);
+                panelCampeonatos.add(Box.createRigidArea(new Dimension(0, 10))); // Espaço entre os JPanels
             }
+
+            // Envolve o panelCampeonatos em um JScrollPane
+            JScrollPane scrollPane = new JScrollPane(panelCampeonatos);
+            scrollPane.setBounds(0, 150, getWidth(), 300); // Define a posição e o tamanho do JScrollPane
+            scrollPane.setOpaque(false);
+            scrollPane.getViewport().setOpaque(false); // Torna o fundo transparente
+            scrollPane.setBorder(null); // Remove a borda do JScrollPane
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Desabilita o scroll horizontal
+
+            // Adiciona o JScrollPane ao layeredPane
+            layeredPane.add(scrollPane, Integer.valueOf(1));
+
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erro ao carregar campeonatos.", "Erro", JOptionPane.ERROR_MESSAGE);
