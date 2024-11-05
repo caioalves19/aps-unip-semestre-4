@@ -1,18 +1,21 @@
 package view;
 
 import controller.CampeonatoController;
+import controller.HomeController;
 import model.Campeonato;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.List;
 
 public class HomeView extends JFrame {
-    private CampeonatoController campeonatoController;
+    private HomeController homeController;
 
     public HomeView() {
         setTitle("Campeonatos");
@@ -35,7 +38,7 @@ public class HomeView extends JFrame {
         tituloLabel.setBounds(0, 20, getWidth(), 50);
         layeredPane.add(tituloLabel, Integer.valueOf(1));
 
-        campeonatoController = new CampeonatoController(this);
+        homeController = new HomeController(this);
         initCampeonatos(layeredPane);
 
         add(layeredPane);
@@ -45,7 +48,7 @@ public class HomeView extends JFrame {
     private void initCampeonatos(JLayeredPane layeredPane) {
         try {
             // Acessa o banco e obtém todos os campeonatos
-            List<Campeonato> campeonatos = campeonatoController.getCampeonatos();
+            List<Campeonato> campeonatos = homeController.getCampeonatos();
 
             // Cria um JPanel com BoxLayout para centralizar os JPanels dos campeonatos
             JPanel panelCampeonatos = new JPanel();
@@ -96,14 +99,36 @@ public class HomeView extends JFrame {
 
             // Envolve o panelCampeonatos em um JScrollPane
             JScrollPane scrollPane = new JScrollPane(panelCampeonatos);
-            scrollPane.setBounds(0, 150, getWidth(), 300); // Define a posição e o tamanho do JScrollPane
+            scrollPane.setBounds(0, 150, getWidth()-15, 300); // Define a posição e o tamanho do JScrollPane
             scrollPane.setOpaque(false);
             scrollPane.getViewport().setOpaque(false); // Torna o fundo transparente
             scrollPane.setBorder(null); // Remove a borda do JScrollPane
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Desabilita o scroll horizontal
+            JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+            verticalScrollBar.setBackground(Color.lightGray); // Cor de fundo
+            verticalScrollBar.setForeground(Color.black); // Cor da barra
 
             // Adiciona o JScrollPane ao layeredPane
             layeredPane.add(scrollPane, Integer.valueOf(1));
+
+            JButton botaoAdicionarCampeonato = new JButton("Adicionar Campeonato");
+            botaoAdicionarCampeonato.setBackground(Color.lightGray);
+            botaoAdicionarCampeonato.setForeground(Color.black);
+            botaoAdicionarCampeonato.setBounds(312, 500, 300, 40);
+            botaoAdicionarCampeonato.setFont(new Font("Arial", Font.PLAIN, 15));
+            botaoAdicionarCampeonato.setFocusPainted(false);
+
+            layeredPane.add(botaoAdicionarCampeonato, Integer.valueOf(1));
+
+            botaoAdicionarCampeonato.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    AdicionarCampeonatoView adicionarCampeonatoView = new AdicionarCampeonatoView();
+                    adicionarCampeonatoView.setVisible(true);
+                }
+            });
 
         } catch (SQLException ex) {
             ex.printStackTrace();

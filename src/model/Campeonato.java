@@ -71,7 +71,7 @@ public class Campeonato {
     public boolean removerJogo(Jogo jogo) {
         return jogos.remove(jogo);
     }
-    
+
     public String listarTimes() {
         StringBuilder sb = new StringBuilder("Times Participantes:\n");
         for (Time time : times) {
@@ -90,13 +90,6 @@ public class Campeonato {
 
     @Override
     public String toString() {
-        return "Campeonato{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", ano=" + ano +
-                '}';
+        return "Campeonato{" + "id=" + id + ", nome='" + nome + '\'' + ", ano=" + ano + '}';
     }
-
-
-
 }
