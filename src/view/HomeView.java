@@ -1,6 +1,5 @@
 package view;
 
-import controller.CampeonatoController;
 import controller.HomeController;
 import model.Campeonato;
 import javax.swing.*;
@@ -125,7 +124,7 @@ public class HomeView extends JFrame {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    AdicionarCampeonatoView adicionarCampeonatoView = new AdicionarCampeonatoView();
+                    AdicionarCampeonatoView adicionarCampeonatoView = new AdicionarCampeonatoView(HomeView.this);
                     adicionarCampeonatoView.setVisible(true);
                 }
             });
