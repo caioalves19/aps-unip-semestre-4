@@ -1,19 +1,23 @@
 package view;
-
+import controller.CriarCampeonatoController;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.SQLException;
+import java.util.Objects;
 
-public class AdicionarCampeonatoView extends JDialog {
-    public AdicionarCampeonatoView(HomeView view) {
+public class CriarCampeonatoView extends JDialog {
+    private final CriarCampeonatoController controller;
+    private final String placeholderText = "Digite o nome do campeonato...";
+
+    public CriarCampeonatoView(HomeView view) {
         super(view, "Adicionar Campeonato", true);
         setSize(705, 482);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+        controller = new CriarCampeonatoController(this);
 
         // Painel principal com BoxLayout vertical
         JPanel panel = new JPanel();
@@ -61,11 +65,28 @@ public class AdicionarCampeonatoView extends JDialog {
         salvarCampeonato.setPreferredSize(new Dimension(150, 40));
         salvarCampeonato.setMaximumSize(new Dimension(150, 40));
         salvarCampeonato.setMinimumSize(new Dimension(150, 40));
-        salvarCampeonato.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        salvarCampeonato.addActionListener(e -> {
+            String nome = nomeCampeonato.getText();
+            int ano = Integer.parseInt(Objects.requireNonNull(anoComboBox.getSelectedItem()).toString());
+            boolean campeonatoSalvo = false;
 
+            if(!nome.isEmpty() && !nome.equals(placeholderText)) {
+                try {
+                    campeonatoSalvo = controller.adicionarCampeonato(nome, ano);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
+            else{
+                JOptionPane.showMessageDialog(null, "Informe o nome do Campeonato!");
+            }
+
+            if (campeonatoSalvo){
+                JOptionPane.showMessageDialog(null, "Campeonato adicionado com sucesso!");
+                view.atualizarCampeonatos();
+                dispose();
+            }
+
         });
         panel.add(salvarCampeonato);
 
@@ -75,12 +96,12 @@ public class AdicionarCampeonatoView extends JDialog {
     }
 
     private void adicionarPlaceholder(JTextField textField) {
-        textField.setText("Digite o nome do campeonato...");
+        textField.setText(placeholderText);
         textField.setForeground(Color.GRAY);
         textField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (textField.getText().equals("Digite o nome do campeonato...")) {
+                if (textField.getText().equals(placeholderText)) {
                     textField.setText("");
                     textField.setForeground(Color.BLACK);
                 }
@@ -90,7 +111,7 @@ public class AdicionarCampeonatoView extends JDialog {
             public void focusLost(FocusEvent e) {
                 if (textField.getText().isEmpty()) {
                     textField.setForeground(Color.GRAY);
-                    textField.setText("Digite o nome do campeonato...");
+                    textField.setText(placeholderText);
                 }
             }
         });
