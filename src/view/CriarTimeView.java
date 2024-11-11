@@ -82,8 +82,9 @@ public class CriarTimeView extends JDialog{
 
         });
         panel.add(salvarTime);
-
         add(panel);
+
+        SwingUtilities.invokeLater(salvarTime::requestFocusInWindow);
     }
 
     private void adicionarPlaceholder(JTextField textField) {
