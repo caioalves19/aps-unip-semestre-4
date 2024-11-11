@@ -57,21 +57,10 @@ public class ConfigCampeonatoView extends JDialog {
         botaoAdicionarTime.addActionListener(e -> {
             try {
                 // Carregar a lista de times do banco de dados
-                ArrayList<String> todosOsTimes = configCampeonatoController.getAllTimesNaoParticipantes(idCampeonato); // Método que você precisa implementar no controlador
+                ArrayList<String> todosOsTimes = configCampeonatoController.getAllTimesNaoParticipantes(idCampeonato);
 
-                // Criar uma lista para exibição
-                String[] timesArray = todosOsTimes.toArray(new String[0]);
-
-                // Mostrar a lista de times em um JOptionPane
-                String timeSelecionado = (String) JOptionPane.showInputDialog(
-                        null,
-                        "Selecione um time:",
-                        "Adicionar Time",
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        timesArray,
-                        timesArray[0]
-                );
+                // Exibir o diálogo de seleção com pesquisa
+                String timeSelecionado = ListaTimesView.showDialog(this, todosOsTimes);
 
                 // Adicionar o time selecionado ao modelo se não for nulo
                 if (timeSelecionado != null && !timeSelecionado.trim().isEmpty()) {
