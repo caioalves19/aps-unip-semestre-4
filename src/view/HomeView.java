@@ -49,12 +49,22 @@ public class HomeView extends JFrame {
         JButton botaoAdicionarCampeonato = new JButton("Criar Campeonato");
         botaoAdicionarCampeonato.setBackground(Color.lightGray);
         botaoAdicionarCampeonato.setForeground(Color.black);
-        botaoAdicionarCampeonato.setBounds(312, 500, 300, 40);
-        botaoAdicionarCampeonato.setFont(new Font("Arial", Font.PLAIN, 15));
+        botaoAdicionarCampeonato.setBounds(298, 500, 148, 40);
+        botaoAdicionarCampeonato.setFont(new Font("Arial", Font.PLAIN, 12));
         botaoAdicionarCampeonato.setFocusPainted(false);
         layeredPane.add(botaoAdicionarCampeonato, Integer.valueOf(1));
 
         botaoAdicionarCampeonato.addActionListener(e -> homeController.exibirCriarCampeonatoView());
+
+        JButton botaoAdicionarTime = new JButton("Criar Time");
+        botaoAdicionarTime.setBackground(Color.lightGray);
+        botaoAdicionarTime.setForeground(Color.black);
+        botaoAdicionarTime.setBounds(450, 500, 148, 40);
+        botaoAdicionarTime.setFont(new Font("Arial", Font.PLAIN, 12));
+        botaoAdicionarTime.setFocusPainted(false);
+        layeredPane.add(botaoAdicionarTime, Integer.valueOf(1));
+
+        botaoAdicionarTime.addActionListener(e -> homeController.exibirCriarTimeView());
 
         add(layeredPane);
     }

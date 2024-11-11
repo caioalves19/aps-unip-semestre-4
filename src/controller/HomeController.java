@@ -5,6 +5,7 @@ import dao.CampeonatoDAOImp;
 import model.Campeonato;
 import view.CampeonatoView;
 import view.CriarCampeonatoView;
+import view.CriarTimeView;
 import view.HomeView;
 
 import java.sql.SQLException;
@@ -40,5 +41,10 @@ public class HomeController {
     public void exibirCriarCampeonatoView() {
         CriarCampeonatoView criarCampeonatoView = new CriarCampeonatoView(homeView);
         criarCampeonatoView.setVisible(true);
+    }
+
+    public void exibirCriarTimeView() {
+        CriarTimeView criarTimeView = new CriarTimeView(homeView);
+        criarTimeView.setVisible(true);
     }
 }
