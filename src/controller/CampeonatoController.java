@@ -2,49 +2,43 @@ package controller;
 
 import dao.CampeonatoDAO;
 import dao.CampeonatoDAOImp;
-import dao.CampeonatoTimeDAO;
-import dao.CampeonatoTimeDAOImp;
 import model.Campeonato;
 import view.CampeonatoView;
 import view.ConfigCampeonatoView;
 import view.HomeView;
+import view.ListaJogosView;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CampeonatoController {
-    private CampeonatoView campoenatoView;
-    private HomeView homeView;
-    private ConfigCampeonatoView configCampeonatoView;
-    private CampeonatoDAO campeonatoDAO;
+    private final HomeView homeView;
+    private final CampeonatoView campeonatoView;
+    private final CampeonatoDAO campeonatoDAO;
 
-    public CampeonatoController(CampeonatoView view) {
-        this.campoenatoView = view;
-        this.campeonatoDAO = new CampeonatoDAOImp();
-    }
-
-    public CampeonatoController(HomeView view) {
-        this.homeView = view;
-        this.campeonatoDAO = new CampeonatoDAOImp();
-    }
-
-    public CampeonatoController(ConfigCampeonatoView view) {
-        this.configCampeonatoView = view;
-        this.campeonatoDAO = new CampeonatoDAOImp();
-    }
-
-    public List<Campeonato> getCampeonatos() throws SQLException {
-        return campeonatoDAO.getAll();
+    public CampeonatoController(CampeonatoView campeonatoView, HomeView homeView) {
+        this.campeonatoView = campeonatoView;
+        this.homeView = homeView;
+        campeonatoDAO = new CampeonatoDAOImp();
     }
 
     public Campeonato getCampeonatoByID(int id) throws SQLException {
         return campeonatoDAO.get(id);
     }
 
-    public void updateCampeonato(int idCampeonato, String nome, int ano) throws SQLException {
-        Campeonato campeonato = new Campeonato(idCampeonato, nome, ano);
-        campeonatoDAO.update(campeonato);
+    public void voltarHome() {
+        homeView.atualizarCampeonatos();
+        homeView.setVisible(true);
+        campeonatoView.dispose();
+    }
+
+    public void exibirConfigCampeonato(int idCampeonato) throws SQLException {
+        ConfigCampeonatoView configCampeonatoView = new ConfigCampeonatoView(idCampeonato, campeonatoView);
+        configCampeonatoView.setVisible(true);
+    }
+
+    public void exibirListaJogos(int idCampeonato) throws SQLException {
+        ListaJogosView listaJogosView = new ListaJogosView(idCampeonato, campeonatoView);
+        listaJogosView.setVisible(true);
     }
 }
 

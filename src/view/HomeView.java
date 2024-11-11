@@ -54,10 +54,7 @@ public class HomeView extends JFrame {
         botaoAdicionarCampeonato.setFocusPainted(false);
         layeredPane.add(botaoAdicionarCampeonato, Integer.valueOf(1));
 
-        botaoAdicionarCampeonato.addActionListener(e -> {
-            CriarCampeonatoView criarCampeonatoView = new CriarCampeonatoView(HomeView.this);
-            criarCampeonatoView.setVisible(true);
-        });
+        botaoAdicionarCampeonato.addActionListener(e -> homeController.exibirCriarCampeonatoView());
 
         add(layeredPane);
     }
@@ -84,14 +81,7 @@ public class HomeView extends JFrame {
                 campeonatoLabel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        CampeonatoView campeonatoView;
-                        try {
-                            campeonatoView = new CampeonatoView(campeonato.getId(), HomeView.this);
-                        } catch (SQLException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        campeonatoView.setVisible(true);
-                        dispose();
+                        homeController.exibirCampeonato(campeonato.getId());
                     }
                 });
 

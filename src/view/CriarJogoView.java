@@ -6,12 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.Calendar;
 import model.Jogo;
 
 public class CriarJogoView extends JFrame {
 
-    private JSpinner horaSpinner;
+    private final JSpinner horaSpinner;
     private JSpinner dataSpinner;
     private JTextField estadioTextField;
     private JComboBox<String> time1ComboBox;

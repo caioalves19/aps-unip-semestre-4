@@ -1,11 +1,9 @@
 package view;
 
-import controller.CampeonatoController;
 import controller.ConfigCampeonatoController;
+import model.Time;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,18 +12,17 @@ import java.awt.event.FocusListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ConfigCampeonatoView extends JFrame {
+public class ConfigCampeonatoView extends JDialog {
 
-    private DefaultListModel<String> timesModel;
-    private JList<String> timesList;
-    private JTextField caixaTextoNomeCampeonato;
-    private ConfigCampeonatoController campeonatoController;
-    private JComboBox<String> anoComboBox;
+    private final DefaultListModel<String> timesModel;
+    private final JList<String> timesList;
+    private final JTextField caixaTextoNomeCampeonato;
+    private final ConfigCampeonatoController configCampeonatoController;
+    private final JComboBox<String> anoComboBox;
 
-    public ConfigCampeonatoView(int idCampeonato, CampeonatoView campeonato) throws SQLException {
-        campeonatoController = new ConfigCampeonatoController(this);
-
-        setTitle("Configurações");
+    public ConfigCampeonatoView(int idCampeonato, CampeonatoView campeonatoView) throws SQLException {
+        super(campeonatoView, "Configurações", true);
+        configCampeonatoController = new ConfigCampeonatoController(this, campeonatoView);
         setSize(705, 482);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -57,35 +54,31 @@ public class ConfigCampeonatoView extends JFrame {
         JButton botaoAdicionarTime = new JButton("+");
         botaoAdicionarTime.setFont(new Font("Arial", Font.PLAIN, 16));
         botaoAdicionarTime.setBounds(450, 258, 90, 28);
-        botaoAdicionarTime.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // Carregar a lista de times do banco de dados
-                    ArrayList<String> todosOsTimes = campeonatoController.getAllTimesNaoParticipantes(idCampeonato); // Método que você precisa implementar no controlador
+        botaoAdicionarTime.addActionListener(e -> {
+            try {
+                // Carregar a lista de times do banco de dados
+                ArrayList<String> todosOsTimes = configCampeonatoController.getAllTimesNaoParticipantes(idCampeonato); // Método que você precisa implementar no controlador
 
-                    // Criar uma lista para exibição
-                    String[] timesArray = todosOsTimes.toArray(new String[0]);
+                // Criar uma lista para exibição
+                String[] timesArray = todosOsTimes.toArray(new String[0]);
 
-                    // Mostrar a lista de times em um JOptionPane
-                    String timeSelecionado = (String) JOptionPane.showInputDialog(
-                            null,
-                            "Selecione um time:",
-                            "Adicionar Time",
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            timesArray,
-                            timesArray[0]
-                    );
+                // Mostrar a lista de times em um JOptionPane
+                String timeSelecionado = (String) JOptionPane.showInputDialog(
+                        null,
+                        "Selecione um time:",
+                        "Adicionar Time",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        timesArray,
+                        timesArray[0]
+                );
 
-                    // Adicionar o time selecionado ao modelo se não for nulo
-                    if (timeSelecionado != null && !timeSelecionado.trim().isEmpty()) {
-                        campeonatoController.addTimeToCampeonato(idCampeonato, timeSelecionado);
-                        atualizarListaTimes(idCampeonato);
-                    }
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, "Erro ao carregar os times: " + ex.getMessage());
+                // Adicionar o time selecionado ao modelo se não for nulo
+                if (timeSelecionado != null && !timeSelecionado.trim().isEmpty()) {
+                    configCampeonatoController.addTimeToCampeonato(idCampeonato, timeSelecionado);
                 }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao carregar os times: " + ex.getMessage());
             }
         });
 
@@ -93,21 +86,17 @@ public class ConfigCampeonatoView extends JFrame {
         JButton botaoRemoverTime = new JButton("-");
         botaoRemoverTime.setFont(new Font("Arial", Font.PLAIN, 16));
         botaoRemoverTime.setBounds(450, 299, 90, 28);
-        botaoRemoverTime.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedIndex = timesList.getSelectedIndex();
-                if (selectedIndex != -1) {
-                    try {
-                        campeonatoController.removeTimeFromCampeonato(idCampeonato, timesList.getSelectedValue());
-                        atualizarListaTimes(idCampeonato);
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
-                    }
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "Selecione um time para remover.");
+        botaoRemoverTime.addActionListener(e -> {
+            int selectedIndex = timesList.getSelectedIndex();
+            if (selectedIndex != -1) {
+                try {
+                    configCampeonatoController.removeTimeFromCampeonato(idCampeonato, timesList.getSelectedValue());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
                 }
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Selecione um time para remover.");
             }
         });
 
@@ -120,28 +109,16 @@ public class ConfigCampeonatoView extends JFrame {
                 String anoCampeonato = anoComboBox.getItemAt(anoComboBox.getSelectedIndex());
 
                 try {
-                    campeonatoController.updateCampeonato(idCampeonato, nomeCampeonato, Integer.parseInt(anoCampeonato));
-                    // Aqui você pode salvar os times também, se necessário
-                    // Exemplo: campeonatoController.saveTimes(idCampeonato, timesModel.toArray());
+                    boolean resposta = configCampeonatoController.updateCampeonato(idCampeonato, nomeCampeonato, Integer.parseInt(anoCampeonato));
+                    if (resposta) {
+                        JOptionPane.showMessageDialog(null, "Campeonato atualizado com sucesso!");
+                    }
                 } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
+                    JOptionPane.showMessageDialog(null, "Erro ao atualizar campeonato: " + ex);
                 }
-
-                campeonato.atualizarCampeonato(nomeCampeonato);
             }
         });
 
-        JButton botaoVoltar = new JButton("Voltar");
-        botaoVoltar.setFont(new Font("Arial", Font.PLAIN, 16));
-        botaoVoltar.setBounds(25, 20, 90, 28);
-        botaoVoltar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
-
-        layeredPane.add(botaoVoltar, Integer.valueOf(1));
         layeredPane.add(botaoSalvarInfoCampeonato, Integer.valueOf(1));
         layeredPane.add(botaoAdicionarTime, Integer.valueOf(1));
         layeredPane.add(botaoRemoverTime, Integer.valueOf(1));
@@ -165,23 +142,23 @@ public class ConfigCampeonatoView extends JFrame {
         layeredPane.add(anoComboBox, Integer.valueOf(1));
 
         // Carregar dados do campeonato
-        String nomeCampeonato = campeonatoController.getCampeonatoByID(idCampeonato).getNome();
-        atualizarNomeCampeonato(nomeCampeonato);
-        String anoCampeonato = String.valueOf(campeonatoController.getCampeonatoByID(idCampeonato).getAno());
+        String nomeCampeonato = configCampeonatoController.getCampeonatoByID(idCampeonato).getNome();
+        caixaTextoNomeCampeonato.setText(nomeCampeonato);
+        caixaTextoNomeCampeonato.setForeground(Color.BLACK);
+        String anoCampeonato = String.valueOf(configCampeonatoController.getCampeonatoByID(idCampeonato).getAno());
         anoComboBox.setSelectedItem(anoCampeonato);
 
         // Carregar times do banco de dados
-        atualizarListaTimes(idCampeonato);
+        configCampeonatoController.atualizarTimesParticipantes(idCampeonato);
 
         add(layeredPane);
     }
 
-    private void atualizarListaTimes(int idCampeonato) throws SQLException {
+    public void atualizarListaTimes(ArrayList<Time> timesParticipantes) throws SQLException {
         timesModel.clear();
-        ArrayList<String> timesParticipantes = campeonatoController.getTimesByCampeonatoID(idCampeonato);
 
-        for (String time : timesParticipantes) {
-            timesModel.addElement(time);
+        for (Time time : timesParticipantes) {
+            timesModel.addElement(time.getNome());
         }
     }
 
@@ -205,10 +182,5 @@ public class ConfigCampeonatoView extends JFrame {
                 }
             }
         });
-    }
-
-    private void atualizarNomeCampeonato(String nome) {
-        this.caixaTextoNomeCampeonato.setText(nome);
-        this.caixaTextoNomeCampeonato.setForeground(Color.BLACK);
     }
 }

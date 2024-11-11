@@ -6,19 +6,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
-
 import controller.JogoController;
 import model.Jogo;
 
-public class ListaJogosView extends JFrame {
+public class ListaJogosView extends JDialog {
 
-    private JList<String> jogosList;
-    private DefaultListModel<String> listModel;
-    private JogoController jogoController;
+    private final JList<String> jogosList;
+    private final DefaultListModel<String> listModel;
+    private final JogoController jogoController;
 
-    public ListaJogosView(int idCampeonato) throws SQLException {
+    public ListaJogosView(int idCampeonato, CampeonatoView campeonatoView) throws SQLException {
+        super(campeonatoView, "Lista de Jogos", true);
         this.jogoController = new JogoController(this); // Utilizar o campo de instância
-        setTitle("Jogos Brasileirão");
         setSize(534, 390);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -34,9 +33,9 @@ public class ListaJogosView extends JFrame {
         layeredPane.add(imageLabel, Integer.valueOf(0));
 
         // Título
-        JLabel tituloLabel = new JLabel("Jogos Brasileirão", SwingConstants.CENTER);
+        JLabel tituloLabel = new JLabel("Lista de Jogos", SwingConstants.CENTER);
         tituloLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        tituloLabel.setForeground(Color.WHITE);
+        tituloLabel.setForeground(Color.BLACK);
         tituloLabel.setBounds(-15, 38, getWidth(), 50);
         layeredPane.add(tituloLabel, Integer.valueOf(1));
 
@@ -54,10 +53,9 @@ public class ListaJogosView extends JFrame {
                     String selectedGame = jogosList.getSelectedValue();
                     String[] parts = selectedGame.split(" - ");
                     int jogoId = Integer.parseInt(parts[0]);
-                    Jogo jogo = null; // Método no controller para buscar jogo
+                    Jogo jogo; // Método no controller para buscar jogo
                     try {
                         jogo = jogoController.getJogoById(jogoId);
-                        System.out.println(jogo.getTimeMandante().getNome());
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }

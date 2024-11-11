@@ -11,13 +11,13 @@ public class CriarCampeonatoView extends JDialog {
     private final CriarCampeonatoController controller;
     private final String placeholderText = "Digite o nome do campeonato...";
 
-    public CriarCampeonatoView(HomeView view) {
-        super(view, "Adicionar Campeonato", true);
+    public CriarCampeonatoView(HomeView homeView) {
+        super(homeView, "Adicionar Campeonato", true);
         setSize(705, 482);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        controller = new CriarCampeonatoController(this);
+        controller = new CriarCampeonatoController(homeView);
 
         // Painel principal com BoxLayout vertical
         JPanel panel = new JPanel();
@@ -83,7 +83,6 @@ public class CriarCampeonatoView extends JDialog {
 
             if (campeonatoSalvo){
                 JOptionPane.showMessageDialog(null, "Campeonato adicionado com sucesso!");
-                view.atualizarCampeonatos();
                 dispose();
             }
 

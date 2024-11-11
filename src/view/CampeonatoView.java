@@ -4,18 +4,13 @@ import controller.CampeonatoController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 public class CampeonatoView extends JFrame {
-        private HomeView homeView;
-        private CampeonatoController campeonatoController;
-        private JLabel tituloLabel;
+    private final JLabel tituloLabel;
 
-    public CampeonatoView(int idCampeonato, HomeView view) throws SQLException {
-        this.homeView = homeView;
-        campeonatoController = new CampeonatoController(this);
+    public CampeonatoView(int idCampeonato, HomeView homeView) throws SQLException {
+        CampeonatoController campeonatoController = new CampeonatoController(this, homeView);
         String titulo = campeonatoController.getCampeonatoByID(idCampeonato).getNome();
         setTitle(titulo);
         setSize(925, 592);
@@ -42,16 +37,11 @@ public class CampeonatoView extends JFrame {
         botaoConfig.setFont(new Font("Arial", Font.PLAIN, 16));
         botaoConfig.setBounds(280, 350, 150, 70);
 
-        botaoConfig.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ConfigCampeonatoView configCampeonatoView = null;
-                try {
-                    configCampeonatoView = new ConfigCampeonatoView(idCampeonato, CampeonatoView.this);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-                configCampeonatoView.setVisible(true);
+        botaoConfig.addActionListener(e -> {
+            try {
+                campeonatoController.exibirConfigCampeonato(idCampeonato);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
             }
         });
 
@@ -59,30 +49,18 @@ public class CampeonatoView extends JFrame {
         botaoVoltar.setFont(new Font("Arial", Font.PLAIN, 16));
         botaoVoltar.setBounds(25, 20, 90, 28);
 
-        botaoVoltar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                HomeView homeView = new HomeView();
-                homeView.setVisible(true); // Exibe a HomeView
-                dispose(); // Fecha a CampeonatoView
-            }
-        });
+        botaoVoltar.addActionListener(e -> campeonatoController.voltarHome());
 
 
         JButton botaoJogos = new JButton("Jogos");
         botaoJogos.setFont(new Font("Arial", Font.PLAIN, 16));
         botaoJogos.setBounds(480, 350, 150, 70);
 
-        botaoJogos.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ListaJogosView listaJogosView = null;
-                try {
-                    listaJogosView = new ListaJogosView(idCampeonato);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-                listaJogosView.setVisible(true);
+        botaoJogos.addActionListener(e -> {
+            try {
+                campeonatoController.exibirListaJogos(idCampeonato);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
             }
         });
 
