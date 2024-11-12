@@ -52,7 +52,7 @@ public class ListaJogosView extends JDialog {
                     Jogo jogo; // Método no controller para buscar jogo
                     try {
                         jogo = listaJogosController.getJogoById(selectedGame.getId());
-                        listaJogosController.exibirTelaJogo(jogo);
+                        listaJogosController.exibirTelaJogo(jogo, idCampeonato);
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -66,7 +66,11 @@ public class ListaJogosView extends JDialog {
         botaoAdicionarJogo.setFont(new Font("Arial", Font.PLAIN, 16));
         botaoAdicionarJogo.setBounds((this.getWidth()-180)/2, this.getHeight()-100, 180, 30);
         botaoAdicionarJogo.addActionListener(e -> {
-            listaJogosController.exibirTelaJogo();
+            try {
+                listaJogosController.exibirTelaJogo(idCampeonato);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         });
         layeredPane.add(botaoAdicionarJogo, Integer.valueOf(1));
 

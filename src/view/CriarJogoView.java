@@ -2,10 +2,11 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
+import java.sql.SQLException;
+import java.util.List;
+
+import controller.CriarJogoController;
 import model.Jogo;
 
 public class CriarJogoView extends JDialog {
@@ -16,14 +17,15 @@ public class CriarJogoView extends JDialog {
     private JComboBox<String> time1ComboBox;
     private JComboBox<String> time2ComboBox;
     private Jogo jogo;
+    private final CriarJogoController criarJogoController = new CriarJogoController();
 
     // Construtor para criar um novo jogo
-    public CriarJogoView(ListaJogosView listaJogosView) {
-        this(null, listaJogosView);
+    public CriarJogoView(ListaJogosView listaJogosView, int idCampeonato) throws SQLException {
+        this(null, listaJogosView, idCampeonato);
     }
 
     // Construtor para editar um jogo existente
-    public CriarJogoView(Jogo jogo, ListaJogosView listaJogosView) {
+    public CriarJogoView(Jogo jogo, ListaJogosView listaJogosView, int idCampeonato) throws SQLException {
         super(listaJogosView, "Jogo", true);
         this.jogo = jogo;
         setTitle(jogo == null ? "Criar Jogo" : "Editar Jogo");
@@ -42,14 +44,20 @@ public class CriarJogoView extends JDialog {
         layeredPane.add(tituloLabel, Integer.valueOf(1));
 
         // ComboBox para Time 1
-
-        time1ComboBox = new JComboBox<>(new String[]{"Selecione o Time 1", "Time A", "Time B", "Time C"});
+        List<String> timesParticipantes = criarJogoController.getTimesParticipantes(idCampeonato);
+        time1ComboBox = new JComboBox<>();
+        for (String time : timesParticipantes){
+            time1ComboBox.addItem(time);
+        }
         time1ComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
         time1ComboBox.setBounds(130, 150, 200, 30);
         layeredPane.add(time1ComboBox, Integer.valueOf(1));
 
         // ComboBox para Time 2
-        time2ComboBox = new JComboBox<>(new String[]{"Selecione o Time 2", "Time X", "Time Y", "Time Z"});
+        time2ComboBox = new JComboBox<>();
+        for (String time : timesParticipantes){
+            time2ComboBox.addItem(time);
+        }
         time2ComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
         time2ComboBox.setBounds(340, 150, 200, 30);
         layeredPane.add(time2ComboBox, Integer.valueOf(1));
@@ -100,32 +108,31 @@ public class CriarJogoView extends JDialog {
     }
 
     private void carregarDadosDoJogo() {
-        time1ComboBox.setSelectedItem(jogo.getTimeMandante());
-        time2ComboBox.setSelectedItem(jogo.getTimeVisitante());
+        time1ComboBox.setSelectedItem(jogo.getTimeMandante().getNome());
+        time2ComboBox.setSelectedItem(jogo.getTimeVisitante().getNome());
         estadioTextField.setText(jogo.getEstadio());
+        estadioTextField.setForeground(Color.BLACK);
         //dataSpinner.setValue(jogo.getDataJogo());
         //horaSpinner.setValue(jogo.getDataJogo());
     }
 
     // Método para adicionar placeholder
     private void adicionarPlaceholder(JTextField textField, String placeholderText) {
-        Color placeholderColor = Color.GRAY;
-        textField.setForeground(placeholderColor);
         textField.setText(placeholderText);
-
-        textField.addFocusListener(new FocusAdapter() {
+        textField.setForeground(Color.GRAY);
+        textField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (textField.getText().equals(placeholderText)) {
                     textField.setText("");
-                    textField.setForeground(Color.BLACK); // Cor do texto normal
+                    textField.setForeground(Color.BLACK);
                 }
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (textField.getText().isEmpty()) {
-                    textField.setForeground(placeholderColor); // Cor do placeholder
+                    textField.setForeground(Color.GRAY);
                     textField.setText(placeholderText);
                 }
             }

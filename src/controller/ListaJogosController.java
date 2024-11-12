@@ -29,13 +29,13 @@ public class ListaJogosController {
         return jogoDAO.get(jogoId);
     }
 
-    public void exibirTelaJogo(Jogo jogo) {
-        CriarJogoView editarJogoView = new CriarJogoView(jogo, listaJogosView);
+    public void exibirTelaJogo(Jogo jogo, int idCampeonato) throws SQLException {
+        CriarJogoView editarJogoView = new CriarJogoView(jogo, listaJogosView, idCampeonato);
         editarJogoView.setVisible(true);
     }
 
-    public void exibirTelaJogo() {
-        CriarJogoView editarJogoView = new CriarJogoView(listaJogosView);
+    public void exibirTelaJogo(int idCampeonato) throws SQLException {
+        CriarJogoView editarJogoView = new CriarJogoView(listaJogosView, idCampeonato);
         editarJogoView.setVisible(true);
     }
 }
