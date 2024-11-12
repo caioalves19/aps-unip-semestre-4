@@ -19,6 +19,7 @@ public class ConfigCampeonatoView extends JDialog {
     private final JTextField caixaTextoNomeCampeonato;
     private final ConfigCampeonatoController configCampeonatoController;
     private final JComboBox<String> anoComboBox;
+    private final String placeHolder = "Digite o Campeonato...";
 
     public ConfigCampeonatoView(int idCampeonato, CampeonatoView campeonatoView) throws SQLException {
         super(campeonatoView, "Configurações", true);
@@ -113,11 +114,11 @@ public class ConfigCampeonatoView extends JDialog {
         layeredPane.add(botaoRemoverTime, Integer.valueOf(1));
 
         // Caixa de texto para o nome do campeonato
-        caixaTextoNomeCampeonato = new JTextField("Digite o Campeonato...");
+        caixaTextoNomeCampeonato = new JTextField(placeHolder);
         caixaTextoNomeCampeonato.setFont(new Font("Arial", Font.PLAIN, 16));
         caixaTextoNomeCampeonato.setForeground(Color.GRAY);
         caixaTextoNomeCampeonato.setBounds(130, 125, 300, 30);
-        adicionarPlaceholder(caixaTextoNomeCampeonato, "Digite o Campeonato...");
+        adicionarPlaceholder(caixaTextoNomeCampeonato);
         layeredPane.add(caixaTextoNomeCampeonato, Integer.valueOf(1));
 
         // ComboBox para anos
@@ -143,21 +144,20 @@ public class ConfigCampeonatoView extends JDialog {
         add(layeredPane);
     }
 
-    public void atualizarListaTimes(ArrayList<Time> timesParticipantes) throws SQLException {
+    public void atualizarListaTimes(ArrayList<Time> timesParticipantes) {
         timesModel.clear();
-
         for (Time time : timesParticipantes) {
             timesModel.addElement(time.getNome());
         }
     }
 
-    private void adicionarPlaceholder(JTextField textField, String placeholder) {
-        textField.setText(placeholder);
+    private void adicionarPlaceholder(JTextField textField) {
+        textField.setText(placeHolder);
         textField.setForeground(Color.GRAY);
         textField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (textField.getText().equals(placeholder)) {
+                if (textField.getText().equals(placeHolder)) {
                     textField.setText("");
                     textField.setForeground(Color.BLACK);
                 }
@@ -167,7 +167,7 @@ public class ConfigCampeonatoView extends JDialog {
             public void focusLost(FocusEvent e) {
                 if (textField.getText().isEmpty()) {
                     textField.setForeground(Color.GRAY);
-                    textField.setText(placeholder);
+                    textField.setText(placeHolder);
                 }
             }
         });

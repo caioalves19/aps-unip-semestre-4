@@ -8,7 +8,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import model.Jogo;
 
-public class CriarJogoView extends JFrame {
+public class CriarJogoView extends JDialog {
 
     private final JSpinner horaSpinner;
     private JSpinner dataSpinner;
@@ -18,12 +18,13 @@ public class CriarJogoView extends JFrame {
     private Jogo jogo;
 
     // Construtor para criar um novo jogo
-    public CriarJogoView() {
-        this(null);
+    public CriarJogoView(ListaJogosView listaJogosView) {
+        this(null, listaJogosView);
     }
 
     // Construtor para editar um jogo existente
-    public CriarJogoView(Jogo jogo) {
+    public CriarJogoView(Jogo jogo, ListaJogosView listaJogosView) {
+        super(listaJogosView, "Jogo", true);
         this.jogo = jogo;
         setTitle(jogo == null ? "Criar Jogo" : "Editar Jogo");
         setSize(705, 482);
@@ -41,6 +42,7 @@ public class CriarJogoView extends JFrame {
         layeredPane.add(tituloLabel, Integer.valueOf(1));
 
         // ComboBox para Time 1
+
         time1ComboBox = new JComboBox<>(new String[]{"Selecione o Time 1", "Time A", "Time B", "Time C"});
         time1ComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
         time1ComboBox.setBounds(130, 150, 200, 30);

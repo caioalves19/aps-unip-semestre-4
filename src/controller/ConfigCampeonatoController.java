@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigCampeonatoController {
-    private ConfigCampeonatoView configCampeonatoView;
-    private CampeonatoView campeonatoView;
+    private final ConfigCampeonatoView configCampeonatoView;
+    private final CampeonatoView campeonatoView;
 
     public ConfigCampeonatoController(ConfigCampeonatoView configCampeonatoView, CampeonatoView campeonatoView) {
         this.configCampeonatoView = configCampeonatoView;
@@ -60,9 +60,7 @@ public class ConfigCampeonatoController {
         Campeonato campeonato = new Campeonato(idCampeonato, nome, ano);
         CampeonatoDAO campeonatoDAO = new CampeonatoDAOImp();
         int resposta = campeonatoDAO.update(campeonato);
-        if (resposta != 0) {
-            campeonatoView.atualizarCampeonato(nome);
-        }
+        campeonatoView.atualizarCampeonato(idCampeonato);
         return resposta != 0;
     }
 

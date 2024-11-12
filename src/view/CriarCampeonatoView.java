@@ -65,6 +65,7 @@ public class CriarCampeonatoView extends JDialog {
         salvarCampeonato.setPreferredSize(new Dimension(150, 40));
         salvarCampeonato.setMaximumSize(new Dimension(150, 40));
         salvarCampeonato.setMinimumSize(new Dimension(150, 40));
+
         salvarCampeonato.addActionListener(e -> {
             String nome = nomeCampeonato.getText();
             int ano = Integer.parseInt(Objects.requireNonNull(anoComboBox.getSelectedItem()).toString());

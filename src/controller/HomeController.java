@@ -7,24 +7,21 @@ import view.CampeonatoView;
 import view.CriarCampeonatoView;
 import view.CriarTimeView;
 import view.HomeView;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeController {
-    private HomeView homeView;
+    private final HomeView homeView;
 
     public HomeController(HomeView homeView) {
         this.homeView = homeView;
     }
 
     public List<Campeonato> getCampeonatos() throws SQLException {
-        List<Campeonato> listaCampeonatos = new ArrayList<>();
+        List<Campeonato> listaCampeonatos;
         CampeonatoDAO campeonatoDAO = new CampeonatoDAOImp();
-
         listaCampeonatos = campeonatoDAO.getAll();
-
         return listaCampeonatos;
     }
 

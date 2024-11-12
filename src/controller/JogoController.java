@@ -20,7 +20,7 @@ public class JogoController {
     }
 
     public List<Jogo> getJogosByCampeonato(int idCampeonato) throws SQLException {
-        ArrayList<Jogo> listaJogos = new ArrayList<>();
+        ArrayList<Jogo> listaJogos;
         JogoDAO jogoDAO = new JogoDAOImp();
         listaJogos = jogoDAO.getAllByCampeonato(idCampeonato);
 

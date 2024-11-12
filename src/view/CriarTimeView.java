@@ -1,14 +1,11 @@
 package view;
 
-import controller.CriarCampeonatoController;
 import controller.CriarTimeController;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.SQLException;
-import java.util.Objects;
 
 public class CriarTimeView extends JDialog{
     private final CriarTimeController controller;
@@ -20,7 +17,7 @@ public class CriarTimeView extends JDialog{
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        controller = new CriarTimeController(homeView);
+        controller = new CriarTimeController();
 
         // Painel principal com BoxLayout vertical
         JPanel panel = new JPanel();
@@ -54,6 +51,7 @@ public class CriarTimeView extends JDialog{
         salvarTime.setPreferredSize(new Dimension(150, 40));
         salvarTime.setMaximumSize(new Dimension(150, 40));
         salvarTime.setMinimumSize(new Dimension(150, 40));
+
         salvarTime.addActionListener(e -> {
             String nome = nomeCampeonato.getText();
             boolean campeonatoSalvo = false;

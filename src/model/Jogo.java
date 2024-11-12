@@ -70,7 +70,7 @@ public class Jogo {
 
     @Override
     public String toString() {
-        return String.format("%s vs %s - Data: %s, Estádio: %s",
+        return String.format("%s x %s - %s - %s",
                 timeMandante.getNome(),
                 timeVisitante.getNome(),
                 dataJogo,
