@@ -33,7 +33,7 @@ public class CampeonatoDAOImp implements CampeonatoDAO{
 
 	@Override
 	public List<Campeonato> getAll() throws SQLException {
-		List<Campeonato> campeonatos = new ArrayList<Campeonato>();
+		List<Campeonato> campeonatos = new ArrayList<>();
 		Connection con = Database.getConnection();
 		String sql = "SELECT * FROM campeonato";
 		PreparedStatement ps = con.prepareStatement(sql);
@@ -70,13 +70,13 @@ public class CampeonatoDAOImp implements CampeonatoDAO{
 	}
 
 	@Override
-	public int delete(Campeonato campeonato) throws SQLException {
+	public void delete(Campeonato campeonato) throws SQLException {
 		Connection con = Database.getConnection();
 		String sql = "DELETE FROM campeonato WHERE id = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setInt(1, campeonato.getId());
 
-		return ps.executeUpdate();
+		ps.executeUpdate();
 	}
 
 }

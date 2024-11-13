@@ -1,6 +1,5 @@
 package dao;
 
-import java.net.ConnectException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class JogoDAOImp implements JogoDAO {
         PreparedStatement ps = con.prepareStatement("SELECT * FROM jogo");
         ResultSet rs = ps.executeQuery();
 
-        List<Jogo> jogos = new ArrayList<Jogo>();
+        List<Jogo> jogos = new ArrayList<>();
         while (rs.next()) {
             Jogo jogo = criarJogo(rs);
             jogos.add(jogo);
@@ -87,12 +86,12 @@ public class JogoDAOImp implements JogoDAO {
     }
 
     @Override
-    public int delete(Jogo jogo) throws SQLException {
+    public void delete(Jogo jogo) throws SQLException {
         Connection con = Database.getConnection();
         String sql = "DELETE FROM jogo WHERE id = ?";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, jogo.getId());
-        return ps.executeUpdate();
+        ps.executeUpdate();
     }
 
     private static Jogo criarJogo(ResultSet rs) throws SQLException {

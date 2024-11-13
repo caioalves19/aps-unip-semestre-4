@@ -98,7 +98,7 @@ public class TimeDAOImp implements TimeDAO{
 	}
 
 	@Override
-	public int delete(Time time) throws SQLException {
+	public void delete(Time time) throws SQLException {
 		Connection con = Database.getConnection();
 		
 		String sql = "DELETE FROM time WHERE id=?";
@@ -110,9 +110,8 @@ public class TimeDAOImp implements TimeDAO{
 		
 		Database.closePreparedStatement(ps);
 		Database.closeConnection(con);
-		
-		return result;
-	}
+
+    }
 
 	@Override
 	public Time getNome(String nome) throws SQLException {

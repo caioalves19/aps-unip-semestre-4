@@ -1,6 +1,5 @@
 package dao;
 
-import model.Campeonato;
 import model.Time;
 
 import java.sql.Connection;

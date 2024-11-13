@@ -8,7 +8,6 @@ import view.CriarCampeonatoView;
 import view.CriarTimeView;
 import view.HomeView;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomeController {

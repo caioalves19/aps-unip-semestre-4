@@ -13,12 +13,12 @@ import model.Jogo;
 
 public class CriarJogoView extends JDialog {
 
-    private JSpinner horaSpinner;
-    private JSpinner dataSpinner;
-    private JTextField estadioTextField;
-    private JComboBox<String> timeMandanteComboBox;
-    private JComboBox<String> timeVisitanteComboBox;
-    private Jogo jogo;
+    private final JSpinner horaSpinner;
+    private final JSpinner dataSpinner;
+    private final JTextField estadioTextField;
+    private final JComboBox<String> timeMandanteComboBox;
+    private final JComboBox<String> timeVisitanteComboBox;
+    private final Jogo jogo;
     private final CriarJogoController criarJogoController;
 
     // Construtor para criar um novo jogo
@@ -100,22 +100,20 @@ public class CriarJogoView extends JDialog {
             excluirButton.setForeground(Color.WHITE);
             layeredPane.add(excluirButton, Integer.valueOf(1));
 
-            excluirButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    int resposta = JOptionPane.showConfirmDialog(
-                            null,
-                            "Tem certeza que deseja excluir o jogo?",
-                            "Confirmação",
-                            JOptionPane.YES_NO_OPTION);
+            excluirButton.addActionListener(e -> {
+                int resposta = JOptionPane.showConfirmDialog(
+                        null,
+                        "Tem certeza que deseja excluir o jogo?",
+                        "Confirmação",
+                        JOptionPane.YES_NO_OPTION);
 
-                    if (resposta == JOptionPane.YES_OPTION) {
-                        try {
-                            criarJogoController.excluirJogo(jogo);
-                        } catch (SQLException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        dispose();
+                if (resposta == JOptionPane.YES_OPTION) {
+                    try {
+                        criarJogoController.excluirJogo(jogo);
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
                     }
+                    dispose();
                 }
             });
             carregarDadosDoJogo();
@@ -125,35 +123,32 @@ public class CriarJogoView extends JDialog {
         JButton salvarButton = new JButton("Salvar");
         salvarButton.setFont(new Font("Arial", Font.PLAIN, 16));
         salvarButton.setBounds(450, 290, 90, 28);
-        salvarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String timeMandante = (String) timeMandanteComboBox.getSelectedItem();
-                String timeVisitante = (String) timeVisitanteComboBox.getSelectedItem();
-                String estadio = estadioTextField.getText();
-                Date data = (Date) dataSpinner.getValue();
-                Date hora = (Date) horaSpinner.getValue();
+        salvarButton.addActionListener(e -> {
+            String timeMandante = (String) timeMandanteComboBox.getSelectedItem();
+            String timeVisitante = (String) timeVisitanteComboBox.getSelectedItem();
+            String estadio = estadioTextField.getText();
+            Date data = (Date) dataSpinner.getValue();
+            Date hora = (Date) horaSpinner.getValue();
 
-                if (jogo == null) {
-                    if (!Objects.equals(timeMandante, timeVisitante)) {
-                        try {
-                            criarJogoController.criarJogo(idCampeonato, timeMandante, timeVisitante, estadio, data, hora);
-                            JOptionPane.showMessageDialog(layeredPane, "Jogo criado com sucesso!");
-                            dispose();
-                        } catch (SQLException ex) {
-                            JOptionPane.showMessageDialog(layeredPane, "Erro: " + ex);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(layeredPane, "Os times não podem ser iguais");
-                    }
-                } else {
+            if (jogo == null) {
+                if (!Objects.equals(timeMandante, timeVisitante)) {
                     try {
-                        criarJogoController.atualizarJogo(jogo, data, hora, estadio);
-                        JOptionPane.showMessageDialog(layeredPane, "Jogo atualizado com sucesso!");
+                        criarJogoController.criarJogo(idCampeonato, timeMandante, timeVisitante, estadio, data, hora);
+                        JOptionPane.showMessageDialog(layeredPane, "Jogo criado com sucesso!");
                         dispose();
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(layeredPane, "Erro: " + ex);
                     }
+                } else {
+                    JOptionPane.showMessageDialog(layeredPane, "Os times não podem ser iguais");
+                }
+            } else {
+                try {
+                    criarJogoController.atualizarJogo(jogo, data, hora, estadio);
+                    JOptionPane.showMessageDialog(layeredPane, "Jogo atualizado com sucesso!");
+                    dispose();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(layeredPane, "Erro: " + ex);
                 }
             }
         });
