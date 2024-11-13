@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `apsunip` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `apsunip`;
 -- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: apsunip
@@ -29,7 +27,7 @@ CREATE TABLE `campeonato` (
   `nome` varchar(100) NOT NULL,
   `ano` year NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +36,7 @@ CREATE TABLE `campeonato` (
 
 LOCK TABLES `campeonato` WRITE;
 /*!40000 ALTER TABLE `campeonato` DISABLE KEYS */;
-INSERT INTO `campeonato` VALUES (1,'Série A',2024),(2,'Série B',2024);
+INSERT INTO `campeonato` VALUES (1,'Série A',2024),(2,'Série B',2024),(50,'Série C',2024);
 /*!40000 ALTER TABLE `campeonato` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +88,7 @@ CREATE TABLE `jogo` (
   CONSTRAINT `jogo_ibfk_1` FOREIGN KEY (`campeonato`) REFERENCES `campeonato` (`id`) ON DELETE CASCADE,
   CONSTRAINT `jogo_ibfk_2` FOREIGN KEY (`time_mandante`) REFERENCES `time` (`id`) ON DELETE CASCADE,
   CONSTRAINT `jogo_ibfk_3` FOREIGN KEY (`time_visitante`) REFERENCES `time` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +97,7 @@ CREATE TABLE `jogo` (
 
 LOCK TABLES `jogo` WRITE;
 /*!40000 ALTER TABLE `jogo` DISABLE KEYS */;
-INSERT INTO `jogo` VALUES (4,1,1,3,'2024-11-04 16:00:00','São Januário');
+INSERT INTO `jogo` VALUES (4,1,1,3,'2024-11-05 14:00:00','Maracanã'),(5,1,9,7,'2024-11-13 20:00:00','Arena Fonte Nova'),(6,1,8,22,'2024-11-13 22:00:00','Arena da Baixada'),(10,2,23,29,'2024-11-15 16:00:00','Vila Belmiro');
 /*!40000 ALTER TABLE `jogo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,7 +113,7 @@ CREATE TABLE `time` (
   `nome` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +122,7 @@ CREATE TABLE `time` (
 
 LOCK TABLES `time` WRITE;
 /*!40000 ALTER TABLE `time` DISABLE KEYS */;
-INSERT INTO `time` VALUES (34,'Amazonas'),(29,'América-MG'),(8,'Athletico'),(22,'Atlético-GO'),(7,'Atlético-MG'),(33,'Avaí'),(9,'Bahia'),(10,'Botafogo'),(37,'Botafogo-SP'),(41,'Brusque'),(27,'Ceará'),(35,'Chapecoense'),(2,'Corinthians'),(31,'Coritiba'),(39,'CRB'),(11,'Criciúma'),(12,'Cruzeiro'),(13,'Cuiabá'),(3,'Flamengo'),(14,'Fluminense'),(15,'Fortaleza'),(30,'Goiás'),(17,'Grêmio'),(42,'Guarani'),(18,'Internacional'),(40,'Ituano'),(20,'Juventude'),(26,'Mirassol'),(24,'Novorizontino'),(32,'Operário-PR'),(6,'Palmeiras'),(36,'Paysandu'),(38,'Ponte Preta'),(19,'RB Bragantino'),(23,'Santos'),(21,'São Paulo'),(25,'Sport'),(1,'Vasco'),(28,'Vila Nova'),(16,'Vitória');
+INSERT INTO `time` VALUES (34,'Amazonas'),(29,'América-MG'),(8,'Athletico'),(22,'Atlético-GO'),(7,'Atlético-MG'),(33,'Avaí'),(9,'Bahia'),(10,'Botafogo'),(37,'Botafogo-SP'),(41,'Brusque'),(27,'Ceará'),(35,'Chapecoense'),(2,'Corinthians'),(31,'Coritiba'),(39,'CRB'),(11,'Criciúma'),(12,'Cruzeiro'),(13,'Cuiabá'),(3,'Flamengo'),(14,'Fluminense'),(15,'Fortaleza'),(30,'Goiás'),(17,'Grêmio'),(42,'Guarani'),(18,'Internacional'),(40,'Ituano'),(20,'Juventude'),(26,'Mirassol'),(24,'Novorizontino'),(32,'Operário-PR'),(6,'Palmeiras'),(36,'Paysandu'),(38,'Ponte Preta'),(19,'RB Bragantino'),(23,'Santos'),(21,'São Paulo'),(25,'Sport'),(53,'Tabajara'),(61,'Tabajara EC'),(60,'Tabajara FC'),(1,'Vasco'),(28,'Vila Nova'),(16,'Vitória');
 /*!40000 ALTER TABLE `time` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -137,4 +135,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-04 18:55:25
+-- Dump completed on 2024-11-13 17:25:12
