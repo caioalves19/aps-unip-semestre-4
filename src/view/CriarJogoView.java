@@ -4,20 +4,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import controller.CriarJogoController;
 import model.Jogo;
 
 public class CriarJogoView extends JDialog {
 
-    private final JSpinner horaSpinner;
+    private JSpinner horaSpinner;
     private JSpinner dataSpinner;
     private JTextField estadioTextField;
-    private JComboBox<String> time1ComboBox;
-    private JComboBox<String> time2ComboBox;
+    private JComboBox<String> timeMandanteComboBox;
+    private JComboBox<String> timeVisitanteComboBox;
     private Jogo jogo;
-    private final CriarJogoController criarJogoController = new CriarJogoController();
+    private final CriarJogoController criarJogoController;
 
     // Construtor para criar um novo jogo
     public CriarJogoView(ListaJogosView listaJogosView, int idCampeonato) throws SQLException {
@@ -27,6 +29,7 @@ public class CriarJogoView extends JDialog {
     // Construtor para editar um jogo existente
     public CriarJogoView(Jogo jogo, ListaJogosView listaJogosView, int idCampeonato) throws SQLException {
         super(listaJogosView, "Jogo", true);
+        criarJogoController = new CriarJogoController(listaJogosView);
         this.jogo = jogo;
         setTitle(jogo == null ? "Criar Jogo" : "Editar Jogo");
         setSize(705, 482);
@@ -45,22 +48,27 @@ public class CriarJogoView extends JDialog {
 
         // ComboBox para Time 1
         List<String> timesParticipantes = criarJogoController.getTimesParticipantes(idCampeonato);
-        time1ComboBox = new JComboBox<>();
-        for (String time : timesParticipantes){
-            time1ComboBox.addItem(time);
+        timeMandanteComboBox = new JComboBox<>();
+        for (String time : timesParticipantes) {
+            timeMandanteComboBox.addItem(time);
         }
-        time1ComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
-        time1ComboBox.setBounds(130, 150, 200, 30);
-        layeredPane.add(time1ComboBox, Integer.valueOf(1));
+        timeMandanteComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
+        timeMandanteComboBox.setBounds(130, 150, 200, 30);
+        layeredPane.add(timeMandanteComboBox, Integer.valueOf(1));
 
         // ComboBox para Time 2
-        time2ComboBox = new JComboBox<>();
-        for (String time : timesParticipantes){
-            time2ComboBox.addItem(time);
+        timeVisitanteComboBox = new JComboBox<>();
+        for (String time : timesParticipantes) {
+            timeVisitanteComboBox.addItem(time);
         }
-        time2ComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
-        time2ComboBox.setBounds(340, 150, 200, 30);
-        layeredPane.add(time2ComboBox, Integer.valueOf(1));
+        timeVisitanteComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
+        timeVisitanteComboBox.setBounds(340, 150, 200, 30);
+        layeredPane.add(timeVisitanteComboBox, Integer.valueOf(1));
+
+        if (jogo != null) {
+            timeMandanteComboBox.setEnabled(false);
+            timeVisitanteComboBox.setEnabled(false);
+        }
 
         // Campo de texto para o Estádio com placeholder
         estadioTextField = new JTextField();
@@ -78,12 +86,38 @@ public class CriarJogoView extends JDialog {
         layeredPane.add(dataSpinner, Integer.valueOf(1));
 
         // Spinner para a hora
-        SpinnerNumberModel horaModel = new SpinnerNumberModel(0, 0, 23, 1); // horas de 0 a 23
-        horaSpinner = new JSpinner(horaModel);
+        horaSpinner = new JSpinner(new SpinnerDateModel());
+        JSpinner.DateEditor horaEditor = new JSpinner.DateEditor(horaSpinner, "HH:mm"); // Define o editor para exibir horas e minutos
+        horaSpinner.setEditor(horaEditor);
         horaSpinner.setBounds(340, 250, 200, 30);
         layeredPane.add(horaSpinner, Integer.valueOf(1));
 
         if (jogo != null) {
+            JButton excluirButton = new JButton("Excluir");
+            excluirButton.setFont(new Font("Arial", Font.PLAIN, 16));
+            excluirButton.setBounds(350, 290, 90, 28);
+            excluirButton.setBackground(Color.RED);
+            excluirButton.setForeground(Color.WHITE);
+            layeredPane.add(excluirButton, Integer.valueOf(1));
+
+            excluirButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    int resposta = JOptionPane.showConfirmDialog(
+                            null,
+                            "Tem certeza que deseja excluir o jogo?",
+                            "Confirmação",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (resposta == JOptionPane.YES_OPTION) {
+                        try {
+                            criarJogoController.excluirJogo(jogo);
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        dispose();
+                    }
+                }
+            });
             carregarDadosDoJogo();
         }
 
@@ -94,12 +128,33 @@ public class CriarJogoView extends JDialog {
         salvarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String timeMandante = (String) timeMandanteComboBox.getSelectedItem();
+                String timeVisitante = (String) timeVisitanteComboBox.getSelectedItem();
+                String estadio = estadioTextField.getText();
+                Date data = (Date) dataSpinner.getValue();
+                Date hora = (Date) horaSpinner.getValue();
+
                 if (jogo == null) {
-                    // Código para salvar novo jogo
+                    if (!Objects.equals(timeMandante, timeVisitante)) {
+                        try {
+                            criarJogoController.criarJogo(idCampeonato, timeMandante, timeVisitante, estadio, data, hora);
+                            JOptionPane.showMessageDialog(layeredPane, "Jogo criado com sucesso!");
+                            dispose();
+                        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(layeredPane, "Erro: " + ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(layeredPane, "Os times não podem ser iguais");
+                    }
                 } else {
-                    // Código para atualizar jogo existente
+                    try {
+                        criarJogoController.atualizarJogo(jogo, data, hora, estadio);
+                        JOptionPane.showMessageDialog(layeredPane, "Jogo atualizado com sucesso!");
+                        dispose();
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(layeredPane, "Erro: " + ex);
+                    }
                 }
-                dispose();
             }
         });
         layeredPane.add(salvarButton, Integer.valueOf(1));
@@ -108,12 +163,13 @@ public class CriarJogoView extends JDialog {
     }
 
     private void carregarDadosDoJogo() {
-        time1ComboBox.setSelectedItem(jogo.getTimeMandante().getNome());
-        time2ComboBox.setSelectedItem(jogo.getTimeVisitante().getNome());
+        List<Date> dataHora = criarJogoController.localDateTimeToDate(jogo.getDataJogo());
+        timeMandanteComboBox.setSelectedItem(jogo.getTimeMandante().getNome());
+        timeVisitanteComboBox.setSelectedItem(jogo.getTimeVisitante().getNome());
         estadioTextField.setText(jogo.getEstadio());
         estadioTextField.setForeground(Color.BLACK);
-        //dataSpinner.setValue(jogo.getDataJogo());
-        //horaSpinner.setValue(jogo.getDataJogo());
+        dataSpinner.setValue(dataHora.getFirst());
+        horaSpinner.setValue(dataHora.getLast());
     }
 
     // Método para adicionar placeholder

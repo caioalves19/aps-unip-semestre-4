@@ -79,7 +79,7 @@ public class ListaJogosView extends JDialog {
     }
 
     // Carregar a lista de jogos a partir do banco de dados
-    private void carregarListaDeJogos(int idCampeonato) throws SQLException {
+    public void carregarListaDeJogos(int idCampeonato) throws SQLException {
         List<Jogo> jogos = listaJogosController.getJogosByCampeonato(idCampeonato);
         listModel.clear();
         for (Jogo jogo : jogos) {
